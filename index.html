@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>동호회 스케줄 자동 배치</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+        
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .three-column {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        @media (max-width: 1200px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            .three-column {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 20px;
+                border-radius: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 20px;
+            }
+            
+            .section {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .section h2 {
+                font-size: 1.2em;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
+            .btn-small {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .button-group .btn {
+                width: 100%;
+            }
+            
+            .add-staff-btn {
+                flex-direction: column;
+            }
+            
+            .add-staff-btn .btn {
+                width: 100%;
+            }
+            
+            .month-selector {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            
+            .month-selector input {
+                width: 100%;
+            }
+            
+            .result-table {
+                font-size: 0.85em;
+            }
+            
+            .result-table th,
+            .result-table td {
+                padding: 8px 6px;
+            }
+            
+            .schedule-item {
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+            
+            .schedule-actions {
+                flex-direction: column;
+            }
+            
+            .schedule-actions .btn {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5em;
+            }
+            
+            .section h2 {
+                font-size: 1.1em;
+            }
+            
+            .role-badge {
+                font-size: 0.75em;
+                padding: 4px 8px;
+            }
+            
+            .unavailable-dates {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+            
+            .date-checkbox {
+                padding: 6px;
+                font-size: 0.85em;
+            }
+        }
+        
+        .firebase-status {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        
+        .firebase-connected {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .firebase-disconnected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .staff-input {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .staff-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            flex-wrap: wrap;
+        }
+        
+        .staff-item label {
+            font-weight: 600;
+            min-width: 80px;
+            color: #555;
+        }
+        
+        .staff-item input {
+            flex: 1;
+            min-width: 150px;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .staff-item input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .staff-item button {
+            padding: 8px 15px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+            white-space: nowrap;
+        }
+        
+        .staff-item button:hover {
+            background: #c0392b;
+        }
+        
+        @media (max-width: 768px) {
+            .staff-item {
+                gap: 10px;
+                padding: 12px;
+            }
+            
+            .staff-item .role-badge {
+                order: 1;
+                width: 100%;
+                text-align: center;
+            }
+            
+            .staff-item label {
+                order: 2;
+                min-width: 60px;
+            }
+            
+            .staff-item input {
+                order: 3;
+                flex: 1;
+                min-width: 0;
+                width: 100%;
+            }
+            
+            .staff-item button {
+                order: 4;
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+        }
+        
+        .role-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: white;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .role-leader {
+            background: #e74c3c;
+        }
+        
+        .role-lesson {
+            background: #3498db;
+        }
+        
+        .role-general {
+            background: #2ecc71;
+        }
+        
+        .add-staff-btn {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .region-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .region-card .region-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .region-card .region-name-input {
+            flex: 1;
+            min-width: 150px;
+            padding: 8px 12px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .region-card .region-name-input:focus {
+            outline: none;
+            border-color: #764ba2;
+        }
+        
+        .region-card .remove-region-btn {
+            padding: 8px 12px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+            white-space: nowrap;
+        }
+        
+        .region-card .remove-region-btn:hover {
+            background: #c0392b;
+        }
+        
+        .region-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        @media (max-width: 768px) {
+            .region-card {
+                padding: 15px;
+            }
+            
+            .region-card .region-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .region-card .region-name-input {
+                width: 100%;
+                min-width: 0;
+            }
+            
+            .region-card .remove-region-btn {
+                width: 100%;
+            }
+        }
+        
+        .week-selector {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .week-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .week-item label {
+            font-weight: 600;
+            min-width: 60px;
+            color: #555;
+        }
+        
+        .week-item select {
+            flex: 1;
+            min-width: 120px;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .week-item {
+                padding: 8px;
+                gap: 8px;
+            }
+            
+            .week-item label {
+                min-width: 50px;
+                font-size: 14px;
+            }
+            
+            .week-item select {
+                min-width: 0;
+                flex: 1;
+                font-size: 13px;
+            }
+        }
+        
+        .month-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .month-selector input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .unavailable-dates {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .date-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 0.9em;
+        }
+        
+        .date-checkbox:hover {
+            background: #f0f0f0;
+        }
+        
+        .date-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+        
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #229954;
+        }
+        
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .result-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        
+        .result-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ddd;
+            font-size: 0.9em;
+        }
+        
+        .result-table tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .meeting-type {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        .meeting-regular {
+            background: #ffe5e5;
+            color: #c0392b;
+        }
+        
+        .meeting-casual {
+            background: #e5f5ff;
+            color: #2980b9;
+        }
+        
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: 500;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+        
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 2px solid #bee5eb;
+        }
+        
+        #result {
+            display: none;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            color: #667eea;
+            font-size: 0.85em;
+            margin-bottom: 8px;
+        }
+        
+        .stat-card .number {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .saved-schedules {
+            margin-top: 20px;
+        }
+        
+        .schedule-item {
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .schedule-item:hover {
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        
+        .schedule-info {
+            flex: 1;
+        }
+        
+        .schedule-info h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .schedule-info p {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .schedule-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .compact-section {
+            padding: 15px 20px;
+        }
+        
+        .info-box {
+            background: #e7f3ff;
+            border: 2px solid #2196F3;
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-top: 10px;
+        }
+        
+        .info-box p {
+            color: #0d47a1;
+            margin: 0;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗓️ 동호회 스케줄 자동 배치</h1>
+        
+        <!-- Firebase 설정 및 상태 -->
+        <div class="section">
+            <h2>🔥 Firebase 설정</h2>
+            
+            <div id="firebaseConfigInput" style="display: none;">
+                <div style="background: #fff3cd; padding: 20px; border-radius: 10px; border: 2px solid #ffc107; margin-bottom: 15px;">
+                    <h3 style="color: #856404; margin-bottom: 15px;">Firebase 프로젝트 정보 입력</h3>
+                    <div style="display: grid; gap: 10px;">
+                        <input type="text" id="configApiKey" placeholder="API Key" style="padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;">
+                        <input type="text" id="configAuthDomain" placeholder="Auth Domain (예: project-id.firebaseapp.com)" style="padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;">
+                        <input type="text" id="configProjectId" placeholder="Project ID" style="padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;">
+                        <input type="text" id="configStorageBucket" placeholder="Storage Bucket (예: project-id.appspot.com)" style="padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;">
+                        <input type="text" id="configMessagingSenderId" placeholder="Messaging Sender ID" style="padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;">
+                        <input type="text" id="configAppId" placeholder="App ID" style="padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;">
+                        <input type="text" id="configDatabaseURL" placeholder="Database URL (예: https://project-id-default-rtdb.firebaseio.com)" style="padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;">
+                    </div>
+                    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn btn-success btn-small" onclick="saveFirebaseConfig()">💾 설정 저장 및 연결</button>
+                        <button class="btn btn-secondary btn-small" onclick="cancelFirebaseConfig()">❌ 취소</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="firebaseStatusContainer">
+                <div id="firebaseStatus" class="firebase-status firebase-disconnected">
+                    🔄 Firebase 연결 중...
+                </div>
+                <div style="margin-top: 10px; text-align: center;">
+                    <button class="btn btn-secondary btn-small" onclick="showFirebaseConfigInput()" id="configBtn">⚙️ Firebase 설정</button>
+                    <button class="btn btn-secondary btn-small" onclick="deleteFirebaseConfig()" id="deleteConfigBtn" style="display: none;">🗑️ 설정 삭제</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 대상 월 선택 (최우선) -->
+        <div class="section">
+            <h2>📅 대상 월 선택 (먼저 선택하세요!)</h2>
+            <div class="month-selector">
+                <label for="targetMonth" style="font-weight: 600;">스케줄 생성할 월:</label>
+                <input type="month" id="targetMonth">
+            </div>
+            <div class="info-box">
+                <p><strong>💡 안내:</strong> 대상 월을 먼저 선택하면 해당 월의 일요일 개수에 맞춰 지역별 주차 설정이 표시됩니다.</p>
+            </div>
+        </div>
+        
+        <!-- 2단 레이아웃: 운영진 정보 + 지역별 모임 설정 -->
+        <div class="two-column">
+            <!-- 왼쪽: 운영진 정보 -->
+            <div class="section">
+                <h2>👥 운영진 정보</h2>
+                
+                <div class="staff-item" style="background: #ffe5e5;">
+                    <span class="role-badge role-leader">모임장</span>
+                    <label>이름:</label>
+                    <input type="text" id="leader" placeholder="모임장 이름">
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <h3 style="margin-bottom: 15px; color: #555; font-size: 1.1em;">운영진 목록</h3>
+                    <div id="staffList" class="staff-input"></div>
+                    
+                    <div class="add-staff-btn">
+                        <button class="btn btn-primary btn-small" onclick="addStaff('lesson')">➕ 레슨 운영진</button>
+                        <button class="btn btn-primary btn-small" onclick="addStaff('general')">➕ 일반 운영진</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 오른쪽: 지역별 모임 설정 -->
+            <div class="section">
+                <h2>📍 지역별 모임 설정</h2>
+                
+                <div id="regionList" style="display: grid; gap: 15px;">
+                    <!-- 지역 카드들이 동적으로 추가됨 -->
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <button class="btn btn-primary btn-small" onclick="addRegion()">➕ 지역 추가</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 불가능한 날짜 선택 -->
+        <div class="section">
+            <h2>❌ 운영진별 불가능한 일요일</h2>
+            <div id="unavailableDates"></div>
+        </div>
+        
+        <!-- 저장 및 생성 버튼 -->
+        <div class="button-group">
+            <button class="btn btn-success" onclick="saveAllData()">💾 운영진 정보 및 설정 저장</button>
+            <button class="btn btn-secondary" onclick="loadAllData()">📂 저장된 정보 불러오기</button>
+            <button class="btn btn-primary" onclick="generateSchedule()">✨ 스케줄 자동 생성</button>
+            <button class="btn btn-secondary" onclick="resetForm()">🔄 초기화</button>
+        </div>
+        
+        <!-- 저장된 스케줄 목록 -->
+        <div class="section" id="savedSchedulesSection" style="display: none;">
+            <h2>📚 저장된 스케줄 목록</h2>
+            <div id="savedSchedulesList" class="saved-schedules"></div>
+        </div>
+        
+        <!-- 결과 -->
+        <div id="result" class="section">
+            <h2>📋 생성된 스케줄</h2>
+            <div id="resultContent"></div>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="downloadSchedule()">💾 CSV 다운로드</button>
+                <button class="btn btn-success" onclick="saveScheduleToFirebase()">☁️ Firebase에 저장</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    
+    <script>
+        // ============================================
+        // Firebase 설정
+        // ============================================
+        let firebaseConfigData = null;
+        
+        // 전역 변수
+        let scheduleData = [];
+        let staffCounter = 0;
+        let regionCounter = 0;
+        let db = null;
+        let firebaseConnected = false;
+        
+        // 초기화
+        document.getElementById('targetMonth').valueAsDate = new Date();
+        
+        // 월 선택 시 일요일 목록 업데이트 및 지역 카드 업데이트
+        document.getElementById('targetMonth').addEventListener('change', function() {
+            updateRegionCards();
+            updateSundayList();
+        });
+        
+        // 페이지 로드 시 일요일 목록 생성
+        window.addEventListener('load', updateSundayList);
+        
+        // 페이지 로드 시 기본 지역 추가
+        window.addEventListener('load', function() {
+            // 기본 지역 3개 추가
+            addRegion('중랑구', {1: 'casual', 2: 'casual', 3: 'regular', 4: 'casual', 5: 'none'});
+            addRegion('금천구', {1: 'none', 2: 'casual', 3: 'none', 4: 'regular', 5: 'none'});
+            addRegion('송파구', {1: 'regular', 2: 'none', 3: 'casual', 4: 'casual', 5: 'none'});
+            
+            // 초기 로드 시 주차 업데이트
+            updateRegionCards();
+        });
+        
+        // Firebase 자동 연결
+        function connectFirebase() {
+            if (!firebaseConfig.apiKey || firebaseConfig.apiKey === "YOUR_API_KEY") {
+                console.warn('Firebase 설정이 완료되지 않았습니다.');
+                const statusDiv = document.getElementById('firebaseStatus');
+                statusDiv.className = 'firebase-status firebase-disconnected';
+                statusDiv.innerHTML = '❌ Firebase 미설정 (코드에서 설정 필요)';
+                return;
+            }
+            
+            try {
+                if (firebase.apps.length === 0) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                db = firebase.database();
+                firebaseConnected = true;
+                
+                const statusDiv = document.getElementById('firebaseStatus');
+                statusDiv.className = 'firebase-status firebase-connected';
+                statusDiv.textContent = '✅ Firebase 연결 완료';
+                
+                loadSavedSchedulesList();
+                
+            } catch (error) {
+                console.error('Firebase 연결 오류:', error);
+                const statusDiv = document.getElementById('firebaseStatus');
+                statusDiv.className = 'firebase-status firebase-disconnected';
+                statusDiv.innerHTML = `❌ Firebase 연결 실패`;
+            }
+        }
+        
+        // 페이지 로드 시 자동으로 Firebase 연결
+        window.addEventListener('load', function() {
+            loadFirebaseConfigFromLocal();
+        });
+        
+        // 간단한 암호화 (Base64 인코딩)
+        function encodeConfig(config) {
+            return btoa(JSON.stringify(config));
+        }
+        
+        // 간단한 복호화 (Base64 디코딩)
+        function decodeConfig(encoded) {
+            try {
+                return JSON.parse(atob(encoded));
+            } catch (e) {
+                return null;
+            }
+        }
+        
+        // Firebase 설정 입력 화면 표시
+        function showFirebaseConfigInput() {
+            document.getElementById('firebaseConfigInput').style.display = 'block';
+            document.getElementById('firebaseStatusContainer').style.display = 'none';
+        }
+        
+        // Firebase 설정 입력 취소
+        function cancelFirebaseConfig() {
+            document.getElementById('firebaseConfigInput').style.display = 'none';
+            document.getElementById('firebaseStatusContainer').style.display = 'block';
+            
+            // 입력 필드 초기화
+            document.getElementById('configApiKey').value = '';
+            document.getElementById('configAuthDomain').value = '';
+            document.getElementById('configProjectId').value = '';
+            document.getElementById('configStorageBucket').value = '';
+            document.getElementById('configMessagingSenderId').value = '';
+            document.getElementById('configAppId').value = '';
+            document.getElementById('configDatabaseURL').value = '';
+        }
+        
+        // Firebase 설정 저장
+        function saveFirebaseConfig() {
+            const config = {
+                apiKey: document.getElementById('configApiKey').value.trim(),
+                authDomain: document.getElementById('configAuthDomain').value.trim(),
+                projectId: document.getElementById('configProjectId').value.trim(),
+                storageBucket: document.getElementById('configStorageBucket').value.trim(),
+                messagingSenderId: document.getElementById('configMessagingSenderId').value.trim(),
+                appId: document.getElementById('configAppId').value.trim(),
+                databaseURL: document.getElementById('configDatabaseURL').value.trim()
+            };
+            
+            // 필수 항목 검증
+            if (!config.apiKey || !config.projectId || !config.databaseURL) {
+                alert('API Key, Project ID, Database URL은 필수 항목입니다!');
+                return;
+            }
+            
+            // 로컬스토리지에 암호화해서 저장
+            const encodedConfig = encodeConfig(config);
+            localStorage.setItem('firebaseConfig', encodedConfig);
+            
+            // Firebase 연결 시도
+            firebaseConfigData = config;
+            connectFirebase();
+            
+            // UI 정리
+            cancelFirebaseConfig();
+        }
+        
+        // 로컬스토리지에서 Firebase 설정 불러오기
+        function loadFirebaseConfigFromLocal() {
+            const encoded = localStorage.getItem('firebaseConfig');
+            if (encoded) {
+                const config = decodeConfig(encoded);
+                if (config) {
+                    firebaseConfigData = config;
+                    connectFirebase();
+                    return true;
+                }
+            }
+            
+            // 설정이 없으면 입력 요청
+            const statusDiv = document.getElementById('firebaseStatus');
+            statusDiv.className = 'firebase-status firebase-disconnected';
+            statusDiv.innerHTML = '❌ Firebase 미설정<br><small>설정 버튼을 눌러 Firebase 정보를 입력하세요</small>';
+            document.getElementById('configBtn').style.display = 'inline-block';
+            return false;
+        }
+        
+        // Firebase 설정 삭제
+        function deleteFirebaseConfig() {
+            if (!confirm('Firebase 설정을 삭제하시겠습니까?\n삭제 후에는 다시 연결해야 합니다.')) {
+                return;
+            }
+            
+            localStorage.removeItem('firebaseConfig');
+            firebaseConfigData = null;
+            firebaseConnected = false;
+            db = null;
+            
+            const statusDiv = document.getElementById('firebaseStatus');
+            statusDiv.className = 'firebase-status firebase-disconnected';
+            statusDiv.innerHTML = '❌ Firebase 연결 해제됨<br><small>설정 버튼을 눌러 다시 연결하세요</small>';
+            
+            document.getElementById('configBtn').style.display = 'inline-block';
+            document.getElementById('deleteConfigBtn').style.display = 'none';
+            
+            alert('Firebase 설정이 삭제되었습니다.');
+        }
+        
+        // Firebase 자동 연결
+        function connectFirebase() {
+            if (!firebaseConfigData) {
+                console.warn('Firebase 설정이 없습니다.');
+                return;
+            }
+            
+            try {
+                if (firebase.apps.length === 0) {
+                    firebase.initializeApp(firebaseConfigData);
+                }
+                db = firebase.database();
+                firebaseConnected = true;
+                
+                const statusDiv = document.getElementById('firebaseStatus');
+                statusDiv.className = 'firebase-status firebase-connected';
+                statusDiv.textContent = '✅ Firebase 연결 완료';
+                
+                document.getElementById('configBtn').style.display = 'none';
+                document.getElementById('deleteConfigBtn').style.display = 'inline-block';
+                
+                console.log('Firebase에 성공적으로 연결되었습니다!');
+                
+                loadSavedSchedulesList();
+                
+            } catch (error) {
+                console.error('Firebase 연결 오류:', error);
+                const statusDiv = document.getElementById('firebaseStatus');
+                statusDiv.className = 'firebase-status firebase-disconnected';
+                statusDiv.innerHTML = `❌ Firebase 연결 실패<br><small>${error.message}</small>`;
+                
+                document.getElementById('configBtn').style.display = 'inline-block';
+                document.getElementById('deleteConfigBtn').style.display = 'none';
+            }
+        }
+        
+        // 해당 월의 일요일 개수 가져오기
+        function getMaxWeeksInMonth() {
+            const monthInput = document.getElementById('targetMonth').value;
+            if (!monthInput) return 5; // 기본값
+            
+            const [year, month] = monthInput.split('-').map(Number);
+            const sundays = getSundaysInMonth(year, month);
+            return sundays.length;
+        }
+        
+        // 모든 지역 카드의 주차 표시 업데이트
+        function updateRegionCards() {
+            const maxWeeks = getMaxWeeksInMonth();
+            const regionCards = document.querySelectorAll('.region-card');
+            
+            regionCards.forEach(card => {
+                const weekSelector = card.querySelector('.week-selector');
+                const weekItems = weekSelector.querySelectorAll('.week-item');
+                
+                weekItems.forEach((item, index) => {
+                    const week = index + 1;
+                    if (week <= maxWeeks) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        }
+        
+        // 지역 추가
+        function addRegion(defaultName = '', defaultWeeks = null) {
+            regionCounter++;
+            const regionList = document.getElementById('regionList');
+            const regionId = `region_${regionCounter}`;
+            
+            const regionCard = document.createElement('div');
+            regionCard.className = 'region-card';
+            regionCard.id = regionId;
+            
+            const regionHeader = document.createElement('div');
+            regionHeader.className = 'region-header';
+            
+            const nameInput = document.createElement('input');
+            nameInput.type = 'text';
+            nameInput.className = 'region-name-input';
+            nameInput.placeholder = '지역명 입력 (예: 강남구)';
+            nameInput.value = defaultName;
+            nameInput.dataset.regionId = regionId;
+            
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'remove-region-btn';
+            removeBtn.textContent = '❌ 삭제';
+            removeBtn.onclick = function() {
+                if (confirm('이 지역을 삭제하시겠습니까?')) {
+                    regionList.removeChild(regionCard);
+                }
+            };
+            
+            regionHeader.appendChild(nameInput);
+            regionHeader.appendChild(removeBtn);
+            regionCard.appendChild(regionHeader);
+            
+            const weekSelector = document.createElement('div');
+            weekSelector.className = 'week-selector';
+            
+            const maxWeeks = getMaxWeeksInMonth();
+            
+            for (let week = 1; week <= 5; week++) {
+                const weekItem = document.createElement('div');
+                weekItem.className = 'week-item';
+                
+                // 해당 월의 주차 수보다 많으면 숨기기
+                if (week > maxWeeks) {
+                    weekItem.style.display = 'none';
+                }
+                
+                const label = document.createElement('label');
+                label.textContent = `${week}주차:`;
+                
+                const select = document.createElement('select');
+                select.dataset.regionId = regionId;
+                select.dataset.week = week;
+                
+                const options = [
+                    { value: 'none', text: '모임 없음' },
+                    { value: 'regular', text: '정기모임' },
+                    { value: 'casual', text: '자율모임' }
+                ];
+                
+                options.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt.value;
+                    option.textContent = opt.text;
+                    select.appendChild(option);
+                });
+                
+                // 기본값 설정
+                if (defaultWeeks && defaultWeeks[week]) {
+                    select.value = defaultWeeks[week];
+                } else {
+                    select.value = 'none';
+                }
+                
+                weekItem.appendChild(label);
+                weekItem.appendChild(select);
+                weekSelector.appendChild(weekItem);
+            }
+            
+            regionCard.appendChild(weekSelector);
+            regionList.appendChild(regionCard);
+        }
+        
+        // 운영진 추가
+        function addStaff(type) {
+            staffCounter++;
+            const staffList = document.getElementById('staffList');
+            const staffId = `staff_${type}_${staffCounter}`;
+            
+            const staffItem = document.createElement('div');
+            staffItem.className = 'staff-item';
+            staffItem.id = staffId;
+            
+            const badge = document.createElement('span');
+            badge.className = `role-badge role-${type}`;
+            badge.textContent = type === 'lesson' ? '레슨' : '일반';
+            
+            const label = document.createElement('label');
+            label.textContent = '이름:';
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.placeholder = `${type === 'lesson' ? '레슨' : '일반'} 운영진 이름`;
+            input.dataset.type = type;
+            input.dataset.id = staffId;
+            input.addEventListener('input', updateSundayList);
+            
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = '❌';
+            removeBtn.onclick = function() {
+                if (confirm('이 운영진을 삭제하시겠습니까?')) {
+                    staffList.removeChild(staffItem);
+                    updateSundayList();
+                }
+            };
+            
+            staffItem.appendChild(badge);
+            staffItem.appendChild(label);
+            staffItem.appendChild(input);
+            staffItem.appendChild(removeBtn);
+            
+            staffList.appendChild(staffItem);
+            
+            updateSundayList();
+        }
+        
+        function getAllStaff() {
+            const staff = {};
+            
+            const leaderName = document.getElementById('leader').value.trim();
+            if (leaderName) {
+                staff['leader'] = {
+                    name: leaderName,
+                    type: 'leader'
+                };
+            }
+            
+            const staffInputs = document.querySelectorAll('#staffList input');
+            staffInputs.forEach(input => {
+                const name = input.value.trim();
+                if (name) {
+                    staff[input.dataset.id] = {
+                        name: name,
+                        type: input.dataset.type
+                    };
+                }
+            });
+            
+            return staff;
+        }
+        
+        function updateSundayList() {
+            const monthInput = document.getElementById('targetMonth').value;
+            if (!monthInput) return;
+            
+            const [year, month] = monthInput.split('-').map(Number);
+            const sundays = getSundaysInMonth(year, month);
+            
+            const container = document.getElementById('unavailableDates');
+            container.innerHTML = '';
+            
+            const allStaff = getAllStaff();
+            
+            if (Object.keys(allStaff).length === 0) {
+                container.innerHTML = '<p style="color: #666;">운영진 정보를 먼저 입력해주세요.</p>';
+                return;
+            }
+            
+            // 3단 그리드로 배치
+            const gridContainer = document.createElement('div');
+            gridContainer.className = 'three-column';
+            
+            Object.entries(allStaff).forEach(([staffId, staffInfo]) => {
+                const staffDiv = document.createElement('div');
+                staffDiv.style.padding = '15px';
+                staffDiv.style.background = 'white';
+                staffDiv.style.borderRadius = '10px';
+                
+                const title = document.createElement('h3');
+                title.textContent = staffInfo.name;
+                title.style.marginBottom = '10px';
+                title.style.color = '#667eea';
+                title.style.fontSize = '1em';
+                staffDiv.appendChild(title);
+                
+                const checkboxContainer = document.createElement('div');
+                checkboxContainer.className = 'unavailable-dates';
+                
+                sundays.forEach(sunday => {
+                    const label = document.createElement('label');
+                    label.className = 'date-checkbox';
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.value = sunday.toISOString().split('T')[0];
+                    checkbox.dataset.staff = staffId;
+                    
+                    const dateText = document.createElement('span');
+                    dateText.textContent = `${sunday.getMonth() + 1}/${sunday.getDate()}`;
+                    
+                    label.appendChild(checkbox);
+                    label.appendChild(dateText);
+                    checkboxContainer.appendChild(label);
+                });
+                
+                staffDiv.appendChild(checkboxContainer);
+                gridContainer.appendChild(staffDiv);
+            });
+            
+            container.appendChild(gridContainer);
+        }
+        
+        function getSundaysInMonth(year, month) {
+            const sundays = [];
+            const date = new Date(year, month - 1, 1);
+            
+            while (date.getDay() !== 0) {
+                date.setDate(date.getDate() + 1);
+            }
+            
+            while (date.getMonth() === month - 1) {
+                sundays.push(new Date(date));
+                date.setDate(date.getDate() + 7);
+            }
+            
+            return sundays;
+        }
+        
+        function getWeekOfMonth(date) {
+            const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+            const firstSunday = new Date(firstDay);
+            while (firstSunday.getDay() !== 0) {
+                firstSunday.setDate(firstSunday.getDate() + 1);
+            }
+            
+            const diffDays = Math.floor((date - firstSunday) / (1000 * 60 * 60 * 24));
+            return Math.floor(diffDays / 7) + 1;
+        }
+        
+        function getRegionMeetings() {
+            const meetings = {};
+            
+            // 모든 지역 카드 찾기
+            const regionCards = document.querySelectorAll('.region-card');
+            
+            regionCards.forEach(card => {
+                const nameInput = card.querySelector('.region-name-input');
+                const regionName = nameInput.value.trim();
+                
+                if (!regionName) return; // 지역명이 없으면 스킵
+                
+                const regionId = nameInput.dataset.regionId;
+                meetings[regionName] = {};
+                
+                // 해당 지역의 모든 주차 선택값 가져오기
+                const selects = card.querySelectorAll('select');
+                selects.forEach(select => {
+                    const week = parseInt(select.dataset.week);
+                    meetings[regionName][week] = select.value;
+                });
+            });
+            
+            return meetings;
+        }
+        
+        function generateSchedule() {
+            const allStaff = getAllStaff();
+            
+            if (!allStaff['leader']) {
+                alert('모임장 이름을 입력해주세요!');
+                return;
+            }
+            
+            const generalStaff = Object.entries(allStaff).filter(([id, info]) => info.type === 'general');
+            if (generalStaff.length === 0) {
+                alert('일반 운영진을 최소 1명 이상 추가해주세요!');
+                return;
+            }
+            
+            const monthInput = document.getElementById('targetMonth').value;
+            if (!monthInput) {
+                alert('대상 월을 선택해주세요!');
+                return;
+            }
+            
+            const unavailable = {};
+            Object.keys(allStaff).forEach(id => {
+                unavailable[id] = [];
+            });
+            
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                const staffId = checkbox.dataset.staff;
+                unavailable[staffId].push(checkbox.value);
+            });
+            
+            const [year, month] = monthInput.split('-').map(Number);
+            const sundays = getSundaysInMonth(year, month);
+            
+            const regionMeetings = getRegionMeetings();
+            
+            const meetings = [];
+            sundays.forEach(sunday => {
+                const week = getWeekOfMonth(sunday);
+                const dateStr = sunday.toISOString().split('T')[0];
+                
+                Object.entries(regionMeetings).forEach(([regionName, weeks]) => {
+                    const meetingType = weeks[week];
+                    if (meetingType && meetingType !== 'none') {
+                        meetings.push({
+                            date: dateStr,
+                            region: regionName,
+                            type: meetingType === 'regular' ? '정기' : '자율',
+                            week
+                        });
+                    }
+                });
+            });
+            
+            const assignments = [];
+            const weeklyAssignments = {};
+            
+            for (let meeting of meetings) {
+                const { date, region, type, week } = meeting;
+                
+                if (!weeklyAssignments[week]) {
+                    weeklyAssignments[week] = new Set();
+                }
+                
+                if (type === '정기') {
+                    const leaderAvailable = !unavailable['leader'].includes(date);
+                    
+                    if (!leaderAvailable) {
+                        assignments.push({
+                            date,
+                            region,
+                            type,
+                            staff: '❌ 배치 불가 (모임장 불가)',
+                            week
+                        });
+                        continue;
+                    }
+                    
+                    const generalStaffIds = Object.entries(allStaff)
+                        .filter(([id, info]) => info.type === 'general')
+                        .map(([id]) => id);
+                    
+                    let assigned = false;
+                    
+                    for (let staffId of generalStaffIds) {
+                        if (!unavailable[staffId].includes(date) && !weeklyAssignments[week].has(staffId)) {
+                            assignments.push({
+                                date,
+                                region,
+                                type,
+                                staff: `${allStaff['leader'].name}, ${allStaff[staffId].name}`,
+                                week
+                            });
+                            weeklyAssignments[week].add('leader');
+                            weeklyAssignments[week].add(staffId);
+                            assigned = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!assigned) {
+                        assignments.push({
+                            date,
+                            region,
+                            type,
+                            staff: `${allStaff['leader'].name}, ❌ 일반 운영진 배치 불가`,
+                            week
+                        });
+                        weeklyAssignments[week].add('leader');
+                    }
+                } else {
+                    let assigned = false;
+                    
+                    for (let [staffId, staffInfo] of Object.entries(allStaff)) {
+                        if (!unavailable[staffId].includes(date) && !weeklyAssignments[week].has(staffId)) {
+                            assignments.push({
+                                date,
+                                region,
+                                type,
+                                staff: staffInfo.name,
+                                week
+                            });
+                            weeklyAssignments[week].add(staffId);
+                            assigned = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!assigned) {
+                        assignments.push({
+                            date,
+                            region,
+                            type,
+                            staff: '❌ 배치 불가',
+                            week
+                        });
+                    }
+                }
+            }
+            
+            displayResults(assignments, year, month);
+            scheduleData = assignments;
+        }
+        
+        function displayResults(assignments, year, month) {
+            const resultDiv = document.getElementById('resultContent');
+            
+            const stats = calculateStats(assignments);
+            
+            let html = `
+                <div class="alert alert-success">
+                    ✅ ${year}년 ${month}월 스케줄이 생성되었습니다!
+                </div>
+                
+                <div class="stats">
+                    ${Object.entries(stats).map(([name, count]) => `
+                        <div class="stat-card">
+                            <h3>${name}</h3>
+                            <div class="number">${count}회</div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <table class="result-table">
+                    <thead>
+                        <tr>
+                            <th>날짜</th>
+                            <th>주차</th>
+                            <th>지역</th>
+                            <th>모임 유형</th>
+                            <th>배치 운영진</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            assignments.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            assignments.forEach(item => {
+                const date = new Date(item.date);
+                const dateStr = `${date.getMonth() + 1}/${date.getDate()}`;
+                
+                html += `
+                    <tr>
+                        <td><strong>${dateStr}</strong></td>
+                        <td>${item.week}주차</td>
+                        <td><strong>${item.region}</strong></td>
+                        <td><span class="meeting-type meeting-${item.type === '정기' ? 'regular' : 'casual'}">${item.type}모임</span></td>
+                        <td>${item.staff}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+            `;
+            
+            resultDiv.innerHTML = html;
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function calculateStats(assignments) {
+            const stats = {};
+            
+            assignments.forEach(item => {
+                if (item.staff.includes('❌')) return;
+                
+                const names = item.staff.split(',').map(n => n.trim());
+                names.forEach(name => {
+                    stats[name] = (stats[name] || 0) + 1;
+                });
+            });
+            
+            return stats;
+        }
+        
+        function downloadSchedule() {
+            if (scheduleData.length === 0) return;
+            
+            let csv = '날짜,주차,지역,모임유형,배치운영진\n';
+            
+            scheduleData.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            scheduleData.forEach(item => {
+                const date = new Date(item.date);
+                const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+                csv += `${dateStr},${item.week}주차,${item.region},${item.type}모임,${item.staff}\n`;
+            });
+            
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            const monthInput = document.getElementById('targetMonth').value;
+            const [year, month] = monthInput.split('-');
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `동호회_스케줄_${year}년${month}월.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        function saveAllData() {
+            if (!firebaseConnected) {
+                alert('Firebase에 먼저 연결해주세요! 코드에서 Firebase 설정을 완료해야 합니다.');
+                return;
+            }
+            
+            const allStaff = getAllStaff();
+            
+            if (Object.keys(allStaff).length === 0) {
+                alert('저장할 운영진 정보가 없습니다!');
+                return;
+            }
+            
+            const unavailable = {};
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                const staffId = checkbox.dataset.staff;
+                if (!unavailable[staffId]) {
+                    unavailable[staffId] = [];
+                }
+                unavailable[staffId].push(checkbox.value);
+            });
+            
+            const regionMeetings = getRegionMeetings();
+            
+            const data = {
+                staff: allStaff,
+                unavailableDates: unavailable,
+                regionMeetings: regionMeetings,
+                targetMonth: document.getElementById('targetMonth').value,
+                updatedAt: new Date().toISOString()
+            };
+            
+            db.ref('clubData').set(data)
+                .then(() => {
+                    alert('✅ 운영진 정보 및 설정이 Firebase에 저장되었습니다!');
+                })
+                .catch((error) => {
+                    alert('❌ 저장 실패: ' + error.message);
+                });
+        }
+        
+        function loadAllData() {
+            if (!firebaseConnected) {
+                alert('Firebase에 먼저 연결해주세요! 코드에서 Firebase 설정을 완료해야 합니다.');
+                return;
+            }
+            
+            db.ref('clubData').once('value')
+                .then((snapshot) => {
+                    const data = snapshot.val();
+                    if (!data) {
+                        alert('저장된 데이터가 없습니다!');
+                        return;
+                    }
+                    
+                    // 운영진 정보 초기화 및 복원
+                    document.getElementById('staffList').innerHTML = '';
+                    staffCounter = 0;
+                    
+                    if (data.staff) {
+                        Object.entries(data.staff).forEach(([staffId, staffInfo]) => {
+                            if (staffId === 'leader') {
+                                document.getElementById('leader').value = staffInfo.name;
+                            } else {
+                                addStaff(staffInfo.type);
+                                const inputs = document.querySelectorAll('#staffList input');
+                                const lastInput = inputs[inputs.length - 1];
+                                lastInput.value = staffInfo.name;
+                                lastInput.dataset.id = staffId;
+                            }
+                        });
+                    }
+                    
+                    // 지역 정보 초기화 및 복원
+                    document.getElementById('regionList').innerHTML = '';
+                    regionCounter = 0;
+                    
+                    if (data.regionMeetings) {
+                        Object.entries(data.regionMeetings).forEach(([regionName, weeks]) => {
+                            addRegion(regionName, weeks);
+                        });
+                        // 지역 복원 후 주차 업데이트
+                        updateRegionCards();
+                    }
+                    
+                    if (data.targetMonth) {
+                        document.getElementById('targetMonth').value = data.targetMonth;
+                    }
+                    
+                    updateSundayList();
+                    
+                    setTimeout(() => {
+                        if (data.unavailableDates) {
+                            Object.entries(data.unavailableDates).forEach(([staffId, dates]) => {
+                                dates.forEach(date => {
+                                    const checkbox = document.querySelector(`input[type="checkbox"][value="${date}"][data-staff="${staffId}"]`);
+                                    if (checkbox) {
+                                        checkbox.checked = true;
+                                    }
+                                });
+                            });
+                        }
+                        
+                        alert('✅ 데이터를 성공적으로 불러왔습니다!');
+                    }, 500);
+                })
+                .catch((error) => {
+                    alert('❌ 불러오기 실패: ' + error.message);
+                });
+        }
+        
+        function saveScheduleToFirebase() {
+            if (!firebaseConnected) {
+                alert('Firebase에 먼저 연결해주세요!');
+                return;
+            }
+            
+            if (scheduleData.length === 0) {
+                alert('저장할 스케줄이 없습니다!');
+                return;
+            }
+            
+            const monthInput = document.getElementById('targetMonth').value;
+            const [year, month] = monthInput.split('-');
+            const scheduleId = `${year}_${month}_${Date.now()}`;
+            
+            const scheduleToSave = {
+                id: scheduleId,
+                year: parseInt(year),
+                month: parseInt(month),
+                data: scheduleData,
+                createdAt: new Date().toISOString()
+            };
+            
+            db.ref('schedules/' + scheduleId).set(scheduleToSave)
+                .then(() => {
+                    alert('✅ 스케줄이 Firebase에 저장되었습니다!');
+                    loadSavedSchedulesList();
+                })
+                .catch((error) => {
+                    alert('❌ 저장 실패: ' + error.message);
+                });
+        }
+        
+        function loadSavedSchedulesList() {
+            if (!firebaseConnected) return;
+            
+            db.ref('schedules').once('value')
+                .then((snapshot) => {
+                    const schedules = snapshot.val();
+                    if (!schedules) {
+                        document.getElementById('savedSchedulesSection').style.display = 'none';
+                        return;
+                    }
+                    
+                    const schedulesList = document.getElementById('savedSchedulesList');
+                    schedulesList.innerHTML = '';
+                    
+                    Object.entries(schedules).forEach(([id, schedule]) => {
+                        const scheduleItem = document.createElement('div');
+                        scheduleItem.className = 'schedule-item';
+                        
+                        const info = document.createElement('div');
+                        info.className = 'schedule-info';
+                        
+                        const title = document.createElement('h4');
+                        title.textContent = `${schedule.year}년 ${schedule.month}월 스케줄`;
+                        
+                        const date = document.createElement('p');
+                        const createdDate = new Date(schedule.createdAt);
+                        date.textContent = `저장일: ${createdDate.toLocaleDateString('ko-KR')} ${createdDate.toLocaleTimeString('ko-KR')}`;
+                        
+                        info.appendChild(title);
+                        info.appendChild(date);
+                        
+                        const actions = document.createElement('div');
+                        actions.className = 'schedule-actions';
+                        
+                        const loadBtn = document.createElement('button');
+                        loadBtn.className = 'btn btn-primary btn-small';
+                        loadBtn.textContent = '📂 불러오기';
+                        loadBtn.onclick = () => loadScheduleFromFirebase(id);
+                        
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.className = 'btn btn-secondary btn-small';
+                        deleteBtn.textContent = '🗑️';
+                        deleteBtn.onclick = () => deleteScheduleFromFirebase(id);
+                        
+                        actions.appendChild(loadBtn);
+                        actions.appendChild(deleteBtn);
+                        
+                        scheduleItem.appendChild(info);
+                        scheduleItem.appendChild(actions);
+                        
+                        schedulesList.appendChild(scheduleItem);
+                    });
+                    
+                    document.getElementById('savedSchedulesSection').style.display = 'block';
+                })
+                .catch((error) => {
+                    console.error('스케줄 목록 불러오기 실패:', error);
+                });
+        }
+        
+        function loadScheduleFromFirebase(scheduleId) {
+            db.ref('schedules/' + scheduleId).once('value')
+                .then((snapshot) => {
+                    const schedule = snapshot.val();
+                    if (!schedule) {
+                        alert('스케줄을 찾을 수 없습니다!');
+                        return;
+                    }
+                    
+                    document.getElementById('targetMonth').value = `${schedule.year}-${String(schedule.month).padStart(2, '0')}`;
+                    
+                    scheduleData = schedule.data;
+                    displayResults(scheduleData, schedule.year, schedule.month);
+                    
+                    alert('✅ 스케줄을 불러왔습니다!');
+                })
+                .catch((error) => {
+                    alert('❌ 불러오기 실패: ' + error.message);
+                });
+        }
+        
+        function deleteScheduleFromFirebase(scheduleId) {
+            if (!confirm('이 스케줄을 삭제하시겠습니까?')) return;
+            
+            db.ref('schedules/' + scheduleId).remove()
+                .then(() => {
+                    alert('✅ 스케줄이 삭제되었습니다!');
+                    loadSavedSchedulesList();
+                })
+                .catch((error) => {
+                    alert('❌ 삭제 실패: ' + error.message);
+                });
+        }
+        
+        function resetForm() {
+            if (confirm('모든 입력 내용을 초기화하시겠습니까?')) {
+                document.getElementById('leader').value = '';
+                document.getElementById('staffList').innerHTML = '';
+                document.getElementById('regionList').innerHTML = '';
+                document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
+                document.getElementById('result').style.display = 'none';
+                scheduleData = [];
+                staffCounter = 0;
+                regionCounter = 0;
+                
+                // 기본 지역 3개 다시 추가
+                addRegion('중랑구', {1: 'casual', 2: 'casual', 3: 'regular', 4: 'casual', 5: 'none'});
+                addRegion('금천구', {1: 'none', 2: 'casual', 3: 'none', 4: 'regular', 5: 'none'});
+                addRegion('송파구', {1: 'regular', 2: 'none', 3: 'casual', 4: 'casual', 5: 'none'});
+            }
+        }
+    </script>
+</body>
+</html>
