@@ -1071,6 +1071,13 @@
         <button class="btn btn-success" onclick="saveMonthSettings()">
           현재 월 설정 저장
         </button>
+        <button
+          class="btn btn-primary"
+          onclick="loadMonthSettings()"
+          title="서버에 저장된 현재 월 설정을 불러옵니다."
+        >
+          현재 월 설정 불러오기
+        </button>
         <button class="btn btn-primary" onclick="generateSchedule()">
           스케줄 자동 생성
         </button>
@@ -1645,6 +1652,26 @@
         return array;
       }
 
+      // 추가: HEX 색상에 따라 가독성 좋은 텍스트 색상('#000' 또는 '#fff') 반환
+      function getContrastColor(hex) {
+        if (!hex) return "#000";
+        // normalize
+        hex = hex.replace("#", "").trim();
+        if (hex.length === 3) {
+          hex = hex
+            .split("")
+            .map((c) => c + c)
+            .join("");
+        }
+        const r = parseInt(hex.substr(0, 2), 16);
+        const g = parseInt(hex.substr(2, 2), 16);
+        const b = parseInt(hex.substr(4, 2), 16);
+        // 상대적 휘도(L) 계산 (가중치 방식)
+        const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        // 임계값: 밝으면 검정 글자, 어두우면 흰 글자
+        return luminance > 180 ? "#000" : "#fff";
+      }
+
       function getSundaysInMonth(year, month) {
         const sundays = [];
         const date = new Date(year, month - 1, 1);
@@ -2160,19 +2187,23 @@
             `
               )
               .join("")}
-        </div>
-        
+         </div>
+         
         <table class="result-table" style="border-collapse: collapse; width: 100%; border: 1px solid #ddd; text-align: center;">
             <thead>
                 <tr>
                     <th rowspan="2" style="border: 1px solid #ddd; padding: 8px; width: 120px; vertical-align: middle; text-align: center;">날짜</th>
     `;
 
+        // 지역별 텍스트 색상을 미리 계산해서 사용
+        const regionTextColors = {};
         allRegionNames.forEach((region, i) => {
           const color = regionSettings[region]
             ? regionSettings[region].color
             : fallbackColors[i % fallbackColors.length];
-          html += `<th colspan="2" style="border: 1px solid #ddd; padding: 8px; background-color: ${color}; text-align: center;">${region}</th>`;
+          const textColor = getContrastColor(color);
+          regionTextColors[region] = textColor;
+          html += `<th colspan="2" style="border: 1px solid #ddd; padding: 8px; background-color: ${color}; color: ${textColor}; text-align: center;">${region}</th>`;
         });
         html += `</tr><tr>`;
         html += `</tr></thead><tbody>`;
@@ -2194,6 +2225,7 @@
             const assignment = assignments.find(
               (a) => a.date === dateStr && a.region === region
             );
+            const cellTextColor = regionTextColors[region] || "#000";
 
             if (assignment) {
               let typeStr = "";
@@ -2459,6 +2491,7 @@
         const keydownHandler = (e) => {
           if (e.key === "Enter") {
             e.preventDefault();
+
             cell.removeEventListener("keydown", keydownHandler);
             cell.removeEventListener("blur", blurHandler);
             saveChanges();
