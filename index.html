@@ -1602,14 +1602,20 @@
             const checkbox = document.createElement("input");
             checkbox.type = "checkbox";
 
-            const dateStr = sunday.toISOString().split("T")[0];
+            // 변경: toISOString() 사용 대신 로컬 날짜 포맷(YYYY-MM-DD) 사용,
+            // 기존에 저장된 ISO 형식과의 호환을 위해 체크 시 두 포맷을 모두 확인
+            const localDateStr = `${sunday.getFullYear()}-${String(
+              sunday.getMonth() + 1
+            ).padStart(2, "0")}-${String(sunday.getDate()).padStart(2, "0")}`;
+            const isoDateStr = sunday.toISOString().split("T")[0];
 
-            checkbox.value = dateStr;
+            checkbox.value = localDateStr;
             checkbox.dataset.staff = staffId;
 
             if (
               unavailableDates[staffId] &&
-              unavailableDates[staffId].includes(dateStr)
+              (unavailableDates[staffId].includes(localDateStr) ||
+                unavailableDates[staffId].includes(isoDateStr))
             ) {
               checkbox.checked = true;
             }
@@ -2008,15 +2014,22 @@
           if (type === "정기") {
             let assigned = false;
             const leaderAvailable = !unavailable["leader"].includes(date);
+            const leaderAlreadyAssigned = weeklyAssignments[week].has("leader");
 
-            if (!leaderAvailable || weeklyAssignments[week].has("leader")) {
+            // 변경: 실패 원인을 구체적으로 기록
+            if (!leaderAvailable || leaderAlreadyAssigned) {
+              const reasons = [];
+              if (!leaderAvailable) reasons.push("모임장 불가");
+              if (leaderAlreadyAssigned) reasons.push("모임장 중복");
+
               assignments.push({
                 date,
                 region,
                 type,
                 week,
-                staff: "배치 불가 (모임장 불가 또는 중복)",
+                staff: "배치 불가",
                 staffType: "none",
+                failReason: reasons.join(", "),
               });
               continue;
             }
@@ -2051,12 +2064,13 @@
             }
 
             if (!assigned) {
+              // 모임장은 배치되지만 운영진이 없는 경우 (부분배치)
               assignments.push({
                 date,
                 region,
                 type,
                 week,
-                staff: `${allStaff["leader"].name}, 파트너 배치 불가`,
+                staff: `${allStaff["leader"].name}, 운영진 배치 불가`,
                 staffType: "none",
               });
               weeklyAssignments[week].add("leader");
@@ -2092,6 +2106,7 @@
             }
 
             if (!assigned) {
+              // 변경: 명확한 실패 이유 추가
               assignments.push({
                 date,
                 region,
@@ -2099,6 +2114,7 @@
                 week,
                 staff: "배치 불가",
                 staffType: "none",
+                failReason: "운영진 불가",
               });
             }
           }
@@ -2183,9 +2199,18 @@
               let typeStr = "";
               let staffStr = assignment.staff;
 
-              if (assignment.staff.includes("배치 불가")) {
+              // 변경: failReason 우선, 없으면 기존 문자열의 괄호 내용(구 포맷) 추출해서 사용
+              if (
+                assignment.staff.includes("배치 불가") ||
+                assignment.failReason
+              ) {
                 typeStr = "배치실패";
-                staffStr = "";
+                const legacyMatch =
+                  !assignment.failReason && assignment.staff
+                    ? assignment.staff.match(/\(([^)]+)\)/)
+                    : null;
+                staffStr =
+                  assignment.failReason || (legacyMatch ? legacyMatch[1] : "");
               } else {
                 if (assignment.type === "정기") {
                   typeStr = "정기모임";
