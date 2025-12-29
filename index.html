@@ -336,40 +336,35 @@
         flex-wrap: wrap;
       }
 
-      .region-card {
+      .location-card {
         background: white;
-        padding: 20px;
-        border-radius: 10px;
+        padding: 12px 15px;
+        border-radius: 8px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         position: relative;
-      }
-
-      .region-card .region-header {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        margin-bottom: 15px;
         gap: 10px;
         flex-wrap: wrap;
       }
 
-      .region-card .region-name-input {
+      .location-card .location-name-input {
         flex: 1;
         min-width: 150px;
         padding: 8px 12px;
         border: 2px solid #ff8c1a;
-        border-radius: 8px;
-        font-size: 1.1em;
+        border-radius: 6px;
+        font-size: 0.95em;
         font-weight: 600;
-        color: #ff8c1a;
+        color: #333;
       }
 
-      .region-card .region-name-input:focus {
+      .location-card .location-name-input:focus {
         outline: none;
         border-color: #764ba2;
       }
 
-      .region-color-picker {
+      .location-color-picker {
         -webkit-appearance: none;
         -moz-appearance: none;
         appearance: none;
@@ -378,106 +373,112 @@
         background-color: transparent;
         border: none;
         cursor: pointer;
-        border-radius: 8px;
+        border-radius: 6px;
         padding: 0;
         border: 1px solid #ccc;
       }
-      .region-color-picker::-webkit-color-swatch {
-        border-radius: 6px;
-        border: none;
-      }
-      .region-color-picker::-moz-color-swatch {
-        border-radius: 6px;
+
+      .location-color-picker::-webkit-color-swatch {
+        border-radius: 4px;
         border: none;
       }
 
-      .region-card .remove-region-btn {
-        padding: 8px 12px;
+      .location-color-picker::-moz-color-swatch {
+        border-radius: 4px;
+        border: none;
+      }
+
+      .location-card .remove-location-btn {
+        padding: 6px 12px;
         background: #e74c3c;
         color: white;
         border: 1px solid transparent;
-        border-radius: 8px;
+        border-radius: 6px;
         cursor: pointer;
         font-weight: 600;
+        font-size: 0.85em;
         transition: all 0.3s;
         white-space: nowrap;
       }
 
-      .region-card .remove-region-btn:hover {
+      .location-card .remove-location-btn:hover {
         background: #c0392b;
       }
 
-      .region-card h3 {
-        color: #ff8c1a;
-        margin-bottom: 15px;
-        font-size: 1.2em;
-      }
-
       @media (max-width: 768px) {
-        .region-card {
-          padding: 15px;
-        }
-
-        .region-card .region-header {
+        .location-card {
+          padding: 10px 12px;
           flex-direction: column;
           align-items: stretch;
         }
 
-        .region-card .region-name-input {
+        .location-card .location-name-input {
           width: 100%;
           min-width: 0;
         }
 
-        .region-card .remove-region-btn {
+        .location-card .remove-location-btn {
           width: 100%;
         }
       }
 
-      .week-selector {
+      .week-schedule-selector {
         display: grid;
         gap: 10px;
       }
 
-      .week-item {
-        display: flex;
+      .week-schedule-item {
+        display: grid;
+        grid-template-columns: 60px 1fr 1fr;
         align-items: center;
         gap: 10px;
-        padding: 10px;
-        background: #f8f9fa;
+        padding: 10px 12px;
+        background: white;
         border-radius: 8px;
-        flex-wrap: wrap;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
       }
 
-      .week-item label {
+      .week-schedule-item label {
         font-weight: 600;
-        min-width: 60px;
         color: #555;
+        font-size: 0.9em;
       }
 
-      .week-item select {
-        flex: 1;
-        min-width: 120px;
-        padding: 8px;
+      .week-schedule-item select {
+        padding: 8px 10px;
         border: 2px solid #ddd;
         border-radius: 6px;
-        font-size: 14px;
+        font-size: 0.9em;
+        cursor: pointer;
+        background: white;
+      }
+
+      .week-schedule-item select:focus {
+        outline: none;
+        border-color: #ff8c1a;
       }
 
       @media (max-width: 768px) {
-        .week-item {
-          padding: 8px;
+        .week-schedule-item {
+          grid-template-columns: 50px 1fr;
           gap: 8px;
         }
 
-        .week-item label {
-          min-width: 50px;
-          font-size: 14px;
+        .week-schedule-item label {
+          font-size: 0.85em;
         }
 
-        .week-item select {
-          min-width: 0;
-          flex: 1;
-          font-size: 13px;
+        .week-schedule-item select {
+          font-size: 0.85em;
+          padding: 6px 8px;
+        }
+
+        .week-schedule-item select:first-of-type {
+          grid-column: 2;
+        }
+
+        .week-schedule-item select:last-of-type {
+          grid-column: 1 / -1;
         }
       }
 
@@ -639,14 +640,6 @@
         background-color: #fff4e6 !important;
       }
 
-      .edit-dropdown {
-        width: 100%;
-        padding: 5px;
-        border: 2px solid #ff8c1a;
-        border-radius: 4px;
-        font-size: 0.9em;
-      }
-
       .meeting-type {
         display: inline-block;
         padding: 4px 10px;
@@ -777,6 +770,7 @@
         margin: 0;
         font-size: 0.9em;
       }
+
       .config-textarea {
         width: 100%;
         height: 200px;
@@ -1042,29 +1036,32 @@
         </div>
         <div class="info-box">
           <p>
-            <strong>안내:</strong> 월을 선택하면 해당 월에 저장된 지역/휴무일
-            설정을 자동으로 불러옵니다.
+            <strong>안내:</strong> 월을 선택하면 해당 월에 저장된 지점/주차별
+            스케줄/휴무일 설정을 자동으로 불러옵니다.
           </p>
         </div>
       </div>
 
       <div class="two-column">
         <div class="section">
-          <h2>[월별] 지역별 모임 설정</h2>
-
-          <div id="regionList" style="display: grid; gap: 15px"></div>
-
+          <h2>지점 관리</h2>
+          <div id="locationList" style="display: grid; gap: 15px"></div>
           <div style="margin-top: 15px">
-            <button class="btn btn-primary btn-small" onclick="addRegion()">
-              지역 추가
+            <button class="btn btn-primary btn-small" onclick="addLocation()">
+              지점 추가
             </button>
           </div>
         </div>
 
         <div class="section">
-          <h2>[월별] 운영진별 불가능한 날짜</h2>
-          <div id="unavailableDates"></div>
+          <h2>[월별] 주차별 운영 스케줄</h2>
+          <div id="weeklySchedule" class="week-schedule-selector"></div>
         </div>
+      </div>
+
+      <div class="section">
+        <h2>[월별] 운영진별 불가능한 날짜</h2>
+        <div id="unavailableDates"></div>
       </div>
 
       <div class="button-group">
@@ -1118,7 +1115,7 @@
       // 전역 변수
       let scheduleData = [];
       let staffCounter = 0;
-      let regionCounter = 0;
+      let locationCounter = 0;
       let db = null;
       let firebaseConnected = false;
 
@@ -1128,25 +1125,18 @@
       const month = String(now.getMonth() + 1).padStart(2, "0");
       document.getElementById("targetMonth").value = `${year}-${month}`;
 
-      // 월 선택 시 일요일 목록 업데이트 및 지역 카드 업데이트
+      // 월 선택 시 일요일 목록 업데이트
       document
         .getElementById("targetMonth")
         .addEventListener("change", function () {
-          updateRegionCards();
+          updateWeeklySchedule();
           updateSundayList();
           loadMonthSettings();
         });
 
-      // 페이지 로드 시 기본 지역 추가 (데이터 로드 실패 시 사용)
-      function addDefaultRegions() {
-        document.getElementById("regionList").innerHTML = "";
-        regionCounter = 0;
-        updateRegionCards();
-      }
-
       // 페이지 로드 시 기본 상태 설정
       window.addEventListener("load", function () {
-        addDefaultRegions();
+        updateWeeklySchedule();
         updateSundayList();
         loadFirebaseConfigFromLocal();
       });
@@ -1373,25 +1363,6 @@
         return sundays.length;
       }
 
-      function updateRegionCards() {
-        const maxWeeks = getMaxWeeksInMonth();
-        const regionCards = document.querySelectorAll(".region-card");
-
-        regionCards.forEach((card) => {
-          const weekSelector = card.querySelector(".week-selector");
-          const weekItems = weekSelector.querySelectorAll(".week-item");
-
-          weekItems.forEach((item, index) => {
-            const week = index + 1;
-            if (week <= maxWeeks) {
-              item.style.display = "flex";
-            } else {
-              item.style.display = "none";
-            }
-          });
-        });
-      }
-
       const defaultColors = [
         "#fff176",
         "#90caf9",
@@ -1401,99 +1372,121 @@
         "#ffd180",
       ];
 
-      function addRegion(defaultName = "", defaultData = null) {
-        regionCounter++;
-        const regionList = document.getElementById("regionList");
-        const regionId = `region_${regionCounter}`;
+      function addLocation(defaultName = "", defaultColor = null) {
+        locationCounter++;
+        const locationList = document.getElementById("locationList");
+        const locationId = `location_${locationCounter}`;
 
-        const regionCard = document.createElement("div");
-        regionCard.className = "region-card";
-        regionCard.id = regionId;
-
-        const regionHeader = document.createElement("div");
-        regionHeader.className = "region-header";
+        const locationCard = document.createElement("div");
+        locationCard.className = "location-card";
+        locationCard.id = locationId;
 
         const nameInput = document.createElement("input");
         nameInput.type = "text";
-        nameInput.className = "region-name-input";
-        nameInput.placeholder = "지역명 입력 (예: 강남구)";
+        nameInput.className = "location-name-input";
+        nameInput.placeholder = "지점명 입력 (예: 중랑구점)";
         nameInput.value = defaultName;
-        nameInput.dataset.regionId = regionId;
+        nameInput.dataset.locationId = locationId;
+        nameInput.addEventListener("change", updateWeeklySchedule);
 
         const colorPicker = document.createElement("input");
         colorPicker.type = "color";
-        colorPicker.className = "region-color-picker";
-
-        let color, defaultWeeks;
-        if (defaultData && defaultData.color) {
-          color = defaultData.color;
-          defaultWeeks = defaultData.weeks;
-        } else {
-          color = defaultColors[regionCounter % defaultColors.length];
-          defaultWeeks = defaultData;
-        }
-        colorPicker.value = color;
+        colorPicker.className = "location-color-picker";
+        colorPicker.value =
+          defaultColor || defaultColors[locationCounter % defaultColors.length];
 
         const removeBtn = document.createElement("button");
-        removeBtn.className = "remove-region-btn";
+        removeBtn.className = "remove-location-btn";
         removeBtn.textContent = "삭제";
         removeBtn.onclick = function () {
-          if (confirm("이 지역을 삭제하시겠습니까?")) {
-            regionList.removeChild(regionCard);
+          if (confirm("이 지점을 삭제하시겠습니까?")) {
+            locationList.removeChild(locationCard);
+            updateWeeklySchedule();
           }
         };
 
-        regionHeader.appendChild(nameInput);
-        regionHeader.appendChild(colorPicker);
-        regionHeader.appendChild(removeBtn);
-        regionCard.appendChild(regionHeader);
+        locationCard.appendChild(nameInput);
+        locationCard.appendChild(colorPicker);
+        locationCard.appendChild(removeBtn);
+        locationList.appendChild(locationCard);
+      }
 
-        const weekSelector = document.createElement("div");
-        weekSelector.className = "week-selector";
+      function getAllLocations() {
+        const locations = {};
+        const locationCards = document.querySelectorAll(".location-card");
+
+        locationCards.forEach((card) => {
+          const nameInput = card.querySelector(".location-name-input");
+          const colorPicker = card.querySelector(".location-color-picker");
+          const locationId = nameInput.dataset.locationId;
+          const locationName = nameInput.value.trim();
+
+          if (locationName) {
+            locations[locationId] = {
+              name: locationName,
+              color: colorPicker.value,
+            };
+          }
+        });
+
+        return locations;
+      }
+
+      function updateWeeklySchedule() {
+        const weeklyScheduleDiv = document.getElementById("weeklySchedule");
+        weeklyScheduleDiv.innerHTML = "";
 
         const maxWeeks = getMaxWeeksInMonth();
+        const locations = getAllLocations();
 
-        for (let week = 1; week <= 5; week++) {
+        if (Object.keys(locations).length === 0) {
+          weeklyScheduleDiv.innerHTML =
+            '<p style="color: #666;">지점을 먼저 추가해주세요.</p>';
+          return;
+        }
+
+        for (let week = 1; week <= maxWeeks; week++) {
           const weekItem = document.createElement("div");
-          weekItem.className = "week-item";
-
-          if (week > maxWeeks) {
-            weekItem.style.display = "none";
-          }
+          weekItem.className = "week-schedule-item";
 
           const label = document.createElement("label");
           label.textContent = `${week}주차:`;
 
-          const select = document.createElement("select");
-          select.dataset.regionId = regionId;
-          select.dataset.week = week;
+          const locationSelect = document.createElement("select");
+          locationSelect.dataset.week = week;
+          locationSelect.className = "location-select";
 
-          const options = [
-            { value: "none", text: "모임 없음" },
-            { value: "regular", text: "정기모임" },
-            { value: "casual", text: "자율모임" },
-          ];
+          const noneOption = document.createElement("option");
+          noneOption.value = "none";
+          noneOption.textContent = "운영 안함";
+          locationSelect.appendChild(noneOption);
 
-          options.forEach((opt) => {
+          Object.entries(locations).forEach(([id, location]) => {
             const option = document.createElement("option");
-            option.value = opt.value;
-            option.textContent = opt.text;
-            select.appendChild(option);
+            option.value = id;
+            option.textContent = location.name;
+            locationSelect.appendChild(option);
           });
 
-          if (defaultWeeks && defaultWeeks[week]) {
-            select.value = defaultWeeks[week];
-          } else {
-            select.value = "none";
-          }
+          const meetingTypeSelect = document.createElement("select");
+          meetingTypeSelect.dataset.week = week;
+          meetingTypeSelect.className = "meeting-type-select";
+
+          const regularOption = document.createElement("option");
+          regularOption.value = "regular";
+          regularOption.textContent = "정기모임";
+          meetingTypeSelect.appendChild(regularOption);
+
+          const casualOption = document.createElement("option");
+          casualOption.value = "casual";
+          casualOption.textContent = "자율모임";
+          meetingTypeSelect.appendChild(casualOption);
 
           weekItem.appendChild(label);
-          weekItem.appendChild(select);
-          weekSelector.appendChild(weekItem);
+          weekItem.appendChild(locationSelect);
+          weekItem.appendChild(meetingTypeSelect);
+          weeklyScheduleDiv.appendChild(weekItem);
         }
-
-        regionCard.appendChild(weekSelector);
-        regionList.appendChild(regionCard);
       }
 
       function addStaff(type) {
@@ -1609,8 +1602,6 @@
             const checkbox = document.createElement("input");
             checkbox.type = "checkbox";
 
-            // 변경: toISOString() 사용 대신 로컬 날짜 포맷(YYYY-MM-DD) 사용,
-            // 기존에 저장된 ISO 형식과의 호환을 위해 체크 시 두 포맷을 모두 확인
             const localDateStr = `${sunday.getFullYear()}-${String(
               sunday.getMonth() + 1
             ).padStart(2, "0")}-${String(sunday.getDate()).padStart(2, "0")}`;
@@ -1652,10 +1643,8 @@
         return array;
       }
 
-      // 추가: HEX 색상에 따라 가독성 좋은 텍스트 색상('#000' 또는 '#fff') 반환
       function getContrastColor(hex) {
         if (!hex) return "#000";
-        // normalize
         hex = hex.replace("#", "").trim();
         if (hex.length === 3) {
           hex = hex
@@ -1666,9 +1655,7 @@
         const r = parseInt(hex.substr(0, 2), 16);
         const g = parseInt(hex.substr(2, 2), 16);
         const b = parseInt(hex.substr(4, 2), 16);
-        // 상대적 휘도(L) 계산 (가중치 방식)
         const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-        // 임계값: 밝으면 검정 글자, 어두우면 흰 글자
         return luminance > 180 ? "#000" : "#fff";
       }
 
@@ -1701,32 +1688,22 @@
         return Math.floor(diffDays / 7) + 1;
       }
 
-      function getRegionMeetings() {
-        const meetings = {};
-        const regionCards = document.querySelectorAll(".region-card");
+      function getWeeklyScheduleSettings() {
+        const settings = {};
+        const weekItems = document.querySelectorAll(".week-schedule-item");
 
-        regionCards.forEach((card) => {
-          const nameInput = card.querySelector(".region-name-input");
-          const regionName = nameInput.value.trim();
+        weekItems.forEach((item) => {
+          const locationSelect = item.querySelector(".location-select");
+          const meetingTypeSelect = item.querySelector(".meeting-type-select");
+          const week = parseInt(locationSelect.dataset.week);
 
-          if (!regionName) return;
-
-          const color = card.querySelector(".region-color-picker").value;
-
-          const weeks = {};
-          const selects = card.querySelectorAll("select");
-          selects.forEach((select) => {
-            const week = parseInt(select.dataset.week);
-            weeks[week] = select.value;
-          });
-
-          meetings[regionName] = {
-            weeks: weeks,
-            color: color,
+          settings[week] = {
+            locationId: locationSelect.value,
+            meetingType: meetingTypeSelect.value,
           };
         });
 
-        return meetings;
+        return settings;
       }
 
       // ============================================
@@ -1819,11 +1796,13 @@
             unavailable[staffId].push(checkbox.value);
           });
 
-        const regionMeetings = getRegionMeetings();
+        const locations = getAllLocations();
+        const weeklySchedule = getWeeklyScheduleSettings();
 
         const data = {
           unavailableDates: unavailable,
-          regionMeetings: regionMeetings,
+          locations: locations,
+          weeklySchedule: weeklySchedule,
           updatedAt: new Date().toISOString(),
         };
 
@@ -1855,22 +1834,49 @@
               console.log(
                 `${monthInput}월에 저장된 설정이 없습니다. 과거 설정 검색 중...`
               );
-              // 해당 월에 데이터가 없으면 과거 월 데이터 찾기
               loadPastMonthSettings(monthInput);
               return;
             }
 
-            document.getElementById("regionList").innerHTML = "";
-            regionCounter = 0;
-            if (data.regionMeetings) {
-              Object.entries(data.regionMeetings).forEach(
-                ([regionName, regionData]) => {
-                  addRegion(regionName, regionData);
+            // 지점 정보 로드
+            document.getElementById("locationList").innerHTML = "";
+            locationCounter = 0;
+            if (data.locations) {
+              Object.entries(data.locations).forEach(
+                ([locationId, locationData]) => {
+                  addLocation(locationData.name, locationData.color);
+                  const lastCard = document.querySelector(
+                    ".location-card:last-child"
+                  );
+                  lastCard.id = locationId;
+                  lastCard.querySelector(
+                    ".location-name-input"
+                  ).dataset.locationId = locationId;
                 }
               );
-              updateRegionCards();
-            } else {
-              addDefaultRegions();
+            }
+
+            // 주차별 스케줄 업데이트
+            updateWeeklySchedule();
+
+            // 주차별 스케줄 설정 로드
+            if (data.weeklySchedule) {
+              Object.entries(data.weeklySchedule).forEach(
+                ([week, schedule]) => {
+                  const weekItem = document.querySelector(
+                    `.week-schedule-item:nth-child(${week})`
+                  );
+                  if (weekItem) {
+                    const locationSelect =
+                      weekItem.querySelector(".location-select");
+                    const meetingTypeSelect = weekItem.querySelector(
+                      ".meeting-type-select"
+                    );
+                    locationSelect.value = schedule.locationId;
+                    meetingTypeSelect.value = schedule.meetingType;
+                  }
+                }
+              );
             }
 
             updateSundayList(data.unavailableDates || {});
@@ -1881,7 +1887,6 @@
           });
       }
 
-      // 가장 가까운 과거 월의 설정을 찾아서 로드
       function loadPastMonthSettings(currentMonth) {
         db.ref("monthlySettings")
           .once("value")
@@ -1890,25 +1895,23 @@
 
             if (!allSettings) {
               console.log("저장된 월별 설정이 전혀 없습니다.");
-              addDefaultRegions();
+              updateWeeklySchedule();
               updateSundayList();
               return;
             }
 
-            // 현재 선택된 월보다 이전인 월들만 필터링
             const pastMonths = Object.keys(allSettings)
               .filter((month) => month < currentMonth)
               .sort()
-              .reverse(); // 최신순 정렬
+              .reverse();
 
             if (pastMonths.length === 0) {
               console.log("과거 설정을 찾을 수 없습니다.");
-              addDefaultRegions();
+              updateWeeklySchedule();
               updateSundayList();
               return;
             }
 
-            // 가장 최근 과거 월의 데이터 사용
             const nearestPastMonth = pastMonths[0];
             const pastData = allSettings[nearestPastMonth];
 
@@ -1916,32 +1919,38 @@
               `${nearestPastMonth}월의 설정을 불러왔습니다. (${currentMonth}월에 적용)`
             );
 
-            document.getElementById("regionList").innerHTML = "";
-            regionCounter = 0;
+            // 지점 정보만 로드
+            document.getElementById("locationList").innerHTML = "";
+            locationCounter = 0;
 
-            // 지역 설정만 가져오기 (휴무일은 가져오지 않음)
-            if (pastData.regionMeetings) {
-              Object.entries(pastData.regionMeetings).forEach(
-                ([regionName, regionData]) => {
-                  addRegion(regionName, regionData);
+            if (pastData.locations) {
+              Object.entries(pastData.locations).forEach(
+                ([locationId, locationData]) => {
+                  addLocation(locationData.name, locationData.color);
+                  const lastCard = document.querySelector(
+                    ".location-card:last-child"
+                  );
+                  lastCard.id = locationId;
+                  lastCard.querySelector(
+                    ".location-name-input"
+                  ).dataset.locationId = locationId;
                 }
               );
-              updateRegionCards();
 
-              // 사용자에게 알림
+              updateWeeklySchedule();
+
               alert(
-                `${currentMonth}월 설정이 없어 ${nearestPastMonth}월의 지역 설정을 불러왔습니다.\n휴무일은 초기화되었으니 다시 설정해주세요.`
+                `${currentMonth}월 설정이 없어 ${nearestPastMonth}월의 지점 설정을 불러왔습니다.\n주차별 스케줄과 휴무일은 초기화되었으니 다시 설정해주세요.`
               );
             } else {
-              addDefaultRegions();
+              updateWeeklySchedule();
             }
 
-            // 휴무일은 비워둠 (과거 월의 휴무일을 가져오지 않음)
             updateSundayList();
           })
           .catch((error) => {
             console.error("과거 설정 불러오기 실패:", error);
-            addDefaultRegions();
+            updateWeeklySchedule();
             updateSundayList();
           });
       }
@@ -1991,80 +2000,85 @@
 
         const [year, month] = monthInput.split("-").map(Number);
         const sundays = getSundaysInMonth(year, month);
-        const regionMeetings = getRegionMeetings();
+        const weeklySchedule = getWeeklyScheduleSettings();
+        const locations = getAllLocations();
 
-        const meetings = [];
+        const assignments = [];
+        const convertedToAutoSchedule = []; // 정기→자율 전환 목록
+
         sundays.forEach((sunday) => {
           const week = getWeekOfMonth(sunday);
-
           const y = sunday.getFullYear();
           const m = String(sunday.getMonth() + 1).padStart(2, "0");
           const d = String(sunday.getDate()).padStart(2, "0");
           const dateStr = `${y}-${m}-${d}`;
 
-          Object.entries(regionMeetings).forEach(([regionName, regionData]) => {
-            const meetingType = regionData.weeks[week];
-            if (meetingType && meetingType !== "none") {
-              meetings.push({
-                date: dateStr,
-                region: regionName,
-                type: meetingType === "regular" ? "정기" : "자율",
-                week,
-              });
+          const schedule = weeklySchedule[week];
+          if (!schedule || schedule.locationId === "none") {
+            return;
+          }
+
+          const locationData = locations[schedule.locationId];
+          if (!locationData) {
+            return;
+          }
+
+          const meetingType =
+            schedule.meetingType === "regular" ? "정기" : "자율";
+
+          if (meetingType === "정기") {
+            const leaderAvailable = !unavailable["leader"].includes(dateStr);
+
+            // 모임장이 불가능한 경우 자율모임으로 전환
+            if (!leaderAvailable) {
+              let availableStaff = Object.entries(allStaff).filter(
+                ([id, info]) => !unavailable[id].includes(dateStr)
+              );
+
+              if (availableStaff.length > 0) {
+                availableStaff = shuffleArray(availableStaff);
+                availableStaff.sort(
+                  (a, b) => assignmentCounts[a[0]] - assignmentCounts[b[0]]
+                );
+                const [assignedStaffId, assignedStaffInfo] = availableStaff[0];
+
+                assignments.push({
+                  date: dateStr,
+                  location: locationData.name,
+                  locationColor: locationData.color,
+                  type: "자율",
+                  week,
+                  staff: assignedStaffInfo.name,
+                  staffType: assignedStaffInfo.type,
+                  converted: true, // 전환 플래그
+                });
+
+                assignmentCounts[assignedStaffId]++;
+
+                // 전환 정보 저장
+                convertedToAutoSchedule.push({
+                  date: `${m}/${d}`,
+                  location: locationData.name,
+                });
+              } else {
+                // 모든 운영진이 불가능한 경우에만 배치 불가
+                assignments.push({
+                  date: dateStr,
+                  location: locationData.name,
+                  locationColor: locationData.color,
+                  type: "정기",
+                  week,
+                  staff: "배치 불가",
+                  staffType: "none",
+                  failReason: "모든 운영진 불가",
+                });
+              }
+              return;
             }
-          });
-        });
 
-        meetings.sort((a, b) => {
-          if (a.date !== b.date) {
-            return new Date(a.date) - new Date(b.date);
-          }
-          if (a.type === "정기" && b.type !== "정기") {
-            return -1;
-          }
-          if (a.type !== "정기" && b.type === "정기") {
-            return 1;
-          }
-          return 0;
-        });
-
-        const assignments = [];
-        const weeklyAssignments = {};
-
-        for (let meeting of meetings) {
-          const { date, region, type, week } = meeting;
-
-          if (!weeklyAssignments[week]) {
-            weeklyAssignments[week] = new Set();
-          }
-
-          if (type === "정기") {
-            let assigned = false;
-            const leaderAvailable = !unavailable["leader"].includes(date);
-            const leaderAlreadyAssigned = weeklyAssignments[week].has("leader");
-
-            // 변경: 실패 원인을 구체적으로 기록
-            if (!leaderAvailable || leaderAlreadyAssigned) {
-              const reasons = [];
-              if (!leaderAvailable) reasons.push("모임장 불가");
-              if (leaderAlreadyAssigned) reasons.push("모임장 중복");
-
-              assignments.push({
-                date,
-                region,
-                type,
-                week,
-                staff: "배치 불가",
-                staffType: "none",
-                failReason: reasons.join(", "),
-              });
-              continue;
-            }
-
+            // 모임장이 가능한 경우 정기모임 진행
             let availablePartners = partnerStaffList.filter(
-              ([id, info]) =>
-                !unavailable[id].includes(date) &&
-                !weeklyAssignments[week].has(id)
+              ([id, info]) => !unavailable[id].includes(dateStr)
             );
 
             if (availablePartners.length > 0) {
@@ -2075,40 +2089,33 @@
               const [assignedStaffId, assignedStaffInfo] = availablePartners[0];
 
               assignments.push({
-                date,
-                region,
-                type,
+                date: dateStr,
+                location: locationData.name,
+                locationColor: locationData.color,
+                type: meetingType,
                 week,
                 staff: `${allStaff["leader"].name}, ${assignedStaffInfo.name}`,
                 staffType: assignedStaffInfo.type,
               });
 
-              weeklyAssignments[week].add("leader");
-              weeklyAssignments[week].add(assignedStaffId);
               assignmentCounts["leader"]++;
               assignmentCounts[assignedStaffId]++;
-              assigned = true;
-            }
-
-            if (!assigned) {
-              // 모임장은 배치되지만 운영진이 없는 경우 (부분배치)
+            } else {
               assignments.push({
-                date,
-                region,
-                type,
+                date: dateStr,
+                location: locationData.name,
+                locationColor: locationData.color,
+                type: meetingType,
                 week,
                 staff: `${allStaff["leader"].name}, 운영진 배치 불가`,
                 staffType: "none",
               });
-              weeklyAssignments[week].add("leader");
               assignmentCounts["leader"]++;
             }
           } else {
-            let assigned = false;
+            // 원래 자율모임인 경우
             let availableStaff = Object.entries(allStaff).filter(
-              ([id, info]) =>
-                !unavailable[id].includes(date) &&
-                !weeklyAssignments[week].has(id)
+              ([id, info]) => !unavailable[id].includes(dateStr)
             );
 
             if (availableStaff.length > 0) {
@@ -2119,25 +2126,22 @@
               const [assignedStaffId, assignedStaffInfo] = availableStaff[0];
 
               assignments.push({
-                date,
-                region,
-                type,
+                date: dateStr,
+                location: locationData.name,
+                locationColor: locationData.color,
+                type: meetingType,
                 week,
                 staff: assignedStaffInfo.name,
                 staffType: assignedStaffInfo.type,
               });
 
-              weeklyAssignments[week].add(assignedStaffId);
               assignmentCounts[assignedStaffId]++;
-              assigned = true;
-            }
-
-            if (!assigned) {
-              // 변경: 명확한 실패 이유 추가
+            } else {
               assignments.push({
-                date,
-                region,
-                type,
+                date: dateStr,
+                location: locationData.name,
+                locationColor: locationData.color,
+                type: meetingType,
                 week,
                 staff: "배치 불가",
                 staffType: "none",
@@ -2145,37 +2149,46 @@
               });
             }
           }
-        }
+        });
 
         scheduleData = assignments;
-        displayResults(assignments, year, month);
+        displayResults(assignments, year, month, convertedToAutoSchedule);
       }
 
-      function displayResults(assignments, year, month) {
+      function displayResults(
+        assignments,
+        year,
+        month,
+        convertedSchedules = []
+      ) {
         const resultDiv = document.getElementById("resultContent");
         const stats = calculateStats(assignments);
-
-        const [targetYear, targetMonth] = document
-          .getElementById("targetMonth")
-          .value.split("-")
-          .map(Number);
-        const sundays = getSundaysInMonth(targetYear, targetMonth);
-
-        const regionSettings = getRegionMeetings();
-        const allRegionNames = Object.keys(regionSettings);
 
         const totalMeetings = assignments.length;
         const failedCount = assignments.filter((a) =>
           a.staff.includes("배치 불가")
         ).length;
 
-        const fallbackColors = ["#fff176", "#90caf9", "#ef9a9a", "#b0bec5"];
-
         let html = `
         <div class="alert alert-success">
             ${year}년 ${month}월 스케줄이 생성되었습니다! (총 ${totalMeetings}건, 배정 실패 ${failedCount}건)
         </div>
-        
+        `;
+
+        // 정기→자율 전환 알림
+        if (convertedSchedules.length > 0) {
+          html += `
+          <div class="alert alert-info">
+              <strong>⚠️ 정기모임 → 자율모임 자동 전환:</strong><br>
+              모임장이 불가능하여 아래 일정이 자율모임으로 전환되었습니다.<br>
+              ${convertedSchedules
+                .map((s) => `• ${s.date} (${s.location})`)
+                .join("<br>")}
+          </div>
+          `;
+        }
+
+        html += `
         <div class="stats">
             ${Object.entries(stats)
               .map(
@@ -2189,83 +2202,57 @@
               .join("")}
          </div>
          
-        <table class="result-table" style="border-collapse: collapse; width: 100%; border: 1px solid #ddd; text-align: center;">
+        <table class="result-table" style="border-collapse: collapse; width: 100%; border: 1px solid #ddd;">
             <thead>
                 <tr>
-                    <th rowspan="2" style="border: 1px solid #ddd; padding: 8px; width: 120px; vertical-align: middle; text-align: center;">날짜</th>
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">날짜</th>
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">지점</th>
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">모임유형</th>
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">담당자</th>
+                </tr>
+            </thead>
+            <tbody>
     `;
 
-        // 지역별 텍스트 색상을 미리 계산해서 사용
-        const regionTextColors = {};
-        allRegionNames.forEach((region, i) => {
-          const color = regionSettings[region]
-            ? regionSettings[region].color
-            : fallbackColors[i % fallbackColors.length];
-          const textColor = getContrastColor(color);
-          regionTextColors[region] = textColor;
-          html += `<th colspan="2" style="border: 1px solid #ddd; padding: 8px; background-color: ${color}; color: ${textColor}; text-align: center;">${region}</th>`;
-        });
-        html += `</tr><tr>`;
-        html += `</tr></thead><tbody>`;
-
-        sundays.forEach((sunday) => {
-          const [y, m, d] = [
-            sunday.getFullYear(),
-            sunday.getMonth() + 1,
-            sunday.getDate(),
-          ];
-          const dateStr = `${y}-${String(m).padStart(2, "0")}-${String(
-            d
-          ).padStart(2, "0")}`;
+        assignments.forEach((assignment) => {
+          const [y, m, d] = assignment.date.split("-").map(Number);
           const displayDate = `${y}. ${m}. ${d}`;
 
-          html += `<tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; text-align: center;">${displayDate}</td>`;
+          const bgColor = assignment.locationColor || "#f8f9fa";
+          const textColor = getContrastColor(bgColor);
 
-          allRegionNames.forEach((region) => {
-            const assignment = assignments.find(
-              (a) => a.date === dateStr && a.region === region
-            );
-            const cellTextColor = regionTextColors[region] || "#000";
+          let typeStr = "";
+          let staffStr = assignment.staff;
 
-            if (assignment) {
-              let typeStr = "";
-              let staffStr = assignment.staff;
-
-              // 변경: failReason 우선, 없으면 기존 문자열의 괄호 내용(구 포맷) 추출해서 사용
-              if (
-                assignment.staff.includes("배치 불가") ||
-                assignment.failReason
-              ) {
-                typeStr = "배치실패";
-                const legacyMatch =
-                  !assignment.failReason && assignment.staff
-                    ? assignment.staff.match(/\(([^)]+)\)/)
-                    : null;
-                staffStr =
-                  assignment.failReason || (legacyMatch ? legacyMatch[1] : "");
-              } else {
-                if (assignment.type === "정기") {
-                  typeStr = "정기모임";
-                } else {
-                  typeStr =
-                    assignment.staffType === "lesson"
-                      ? "자율(레슨O)"
-                      : "자율(레슨X)";
-                }
-              }
-
-              // 수정 가능한 셀로 만들기
-              html += `
-                    <td class="editable-cell" style="border: 1px solid #ddd; padding: 8px; text-align: center;" 
-                        onclick="editMeetingType('${dateStr}', '${region}')">${typeStr}</td>
-                    <td class="editable-cell" style="border: 1px solid #ddd; padding: 8px; text-align: center;" 
-                        onclick="editStaff('${dateStr}', '${region}')">${staffStr}</td>
-                `;
+          if (assignment.staff.includes("배치 불가") || assignment.failReason) {
+            typeStr = "배치실패";
+            staffStr = assignment.failReason || "";
+          } else {
+            if (assignment.type === "정기") {
+              typeStr = "정기모임";
             } else {
-              html += `<td style="border: 1px solid #ddd; padding: 8px; text-align: center;"></td><td style="border: 1px solid #ddd; padding: 8px; text-align: center;"></td>`;
+              typeStr =
+                assignment.staffType === "lesson"
+                  ? "자율(레슨O)"
+                  : "자율(레슨X)";
+
+              // 전환된 스케줄 표시
+              if (assignment.converted) {
+                typeStr += " 🔄";
+              }
             }
-          });
-          html += `</tr>`;
+          }
+
+          html += `
+            <tr>
+                <td style="border: 1px solid #ddd; padding: 10px; font-weight: bold; text-align: center;">${displayDate}</td>
+                <td style="border: 1px solid #ddd; padding: 10px; text-align: center; background-color: ${bgColor}; color: ${textColor};">${assignment.location}</td>
+                <td class="editable-cell" style="border: 1px solid #ddd; padding: 10px; text-align: center;" 
+                    onclick="editMeetingType('${assignment.date}')">${typeStr}</td>
+                <td class="editable-cell" style="border: 1px solid #ddd; padding: 10px; text-align: center;" 
+                    onclick="editStaff('${assignment.date}')">${staffStr}</td>
+            </tr>
+          `;
         });
 
         html += `</tbody></table>`;
@@ -2281,10 +2268,8 @@
       // 스케줄 수정 기능
       // ============================================
 
-      function editMeetingType(date, region) {
-        const assignment = scheduleData.find(
-          (a) => a.date === date && a.region === region
-        );
+      function editMeetingType(date) {
+        const assignment = scheduleData.find((a) => a.date === date);
 
         if (!assignment) {
           alert("해당 날짜에 모임이 없습니다.");
@@ -2294,13 +2279,11 @@
         const cell = event.target;
         const originalContent = cell.textContent;
 
-        // contenteditable로 변경
         cell.contentEditable = true;
         cell.style.backgroundColor = "#fff8dc";
         cell.style.outline = "2px solid #ff8c1a";
         cell.focus();
 
-        // 텍스트 전체 선택
         const range = document.createRange();
         range.selectNodeContents(cell);
         const selection = window.getSelection();
@@ -2319,7 +2302,6 @@
 
           const newText = cell.textContent.trim();
 
-          // 입력값에 따라 모임 유형 결정
           if (newText.includes("정기") || newText === "정기모임") {
             assignment.type = "정기";
             cell.textContent = "정기모임";
@@ -2342,7 +2324,6 @@
           } else if (newText.includes("배치") || newText.includes("불가")) {
             cell.textContent = "배치실패";
           } else {
-            // 잘못된 입력
             cell.textContent = originalContent;
             return;
           }
@@ -2387,10 +2368,8 @@
         cell.addEventListener("blur", blurHandler);
       }
 
-      function editStaff(date, region) {
-        const assignment = scheduleData.find(
-          (a) => a.date === date && a.region === region
-        );
+      function editStaff(date) {
+        const assignment = scheduleData.find((a) => a.date === date);
 
         if (!assignment || assignment.staff.includes("배치 불가")) {
           alert("담당자를 배정할 수 없는 일정입니다.");
@@ -2401,13 +2380,11 @@
         const cell = event.target;
         const originalContent = cell.textContent;
 
-        // contenteditable로 변경
         cell.contentEditable = true;
         cell.style.backgroundColor = "#fff8dc";
         cell.style.outline = "2px solid #ff8c1a";
         cell.focus();
 
-        // 텍스트 전체 선택
         const range = document.createRange();
         range.selectNodeContents(cell);
         const selection = window.getSelection();
@@ -2431,13 +2408,11 @@
             return;
           }
 
-          // 쉼표로 구분된 이름들 처리
           const names = newText
             .split(",")
             .map((n) => n.trim())
             .filter((n) => n);
 
-          // 입력된 이름이 운영진 목록에 있는지 확인
           const validNames = [];
           names.forEach((name) => {
             const staffEntry = Object.entries(allStaff).find(
@@ -2461,7 +2436,6 @@
 
           assignment.staff = validNames.join(", ");
 
-          // staffType 업데이트 (자율모임이고 1명인 경우)
           if (assignment.type === "자율" && validNames.length === 1) {
             const staffEntry = Object.entries(allStaff).find(
               ([id, info]) => info.name === validNames[0]
@@ -2701,19 +2675,20 @@
       function resetForm() {
         if (
           confirm(
-            "현재 월의 설정(지역, 불가능한 날짜)을 초기화하시겠습니까?\n(운영진 목록은 유지됩니다)"
+            "현재 월의 설정(지점, 주차별 스케줄, 불가능한 날짜)을 초기화하시겠습니까?\n(운영진 목록은 유지됩니다)"
           )
         ) {
-          document.getElementById("regionList").innerHTML = "";
+          document.getElementById("locationList").innerHTML = "";
           document
             .querySelectorAll('input[type="checkbox"]')
             .forEach((checkbox) => (checkbox.checked = false));
           document.getElementById("result").style.display = "none";
 
           scheduleData = [];
-          regionCounter = 0;
+          locationCounter = 0;
 
-          addDefaultRegions();
+          updateWeeklySchedule();
+          updateSundayList();
         }
       }
     </script>
