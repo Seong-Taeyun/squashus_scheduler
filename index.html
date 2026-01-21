@@ -14,24 +14,38 @@
         box-sizing: border-box;
       }
 
+      :root {
+        --bg-primary: #2a2d5f;
+        --bg-secondary: white;
+        --bg-card: #f8f9fa;
+        --text-primary: #333;
+        --text-secondary: #666;
+        --accent-orange: #ff8c1a;
+        --accent-orange-dark: #e67a0a;
+        --shadow-color: rgba(0, 0, 0, 0.3);
+        --border-color: #ddd;
+      }
+
       body {
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #2a2d5f;
+        background-color: var(--bg-primary);
         min-height: 100vh;
         padding: 20px;
+        color: var(--text-primary);
+        transition: background-color 0.3s ease;
       }
 
       .container {
         max-width: 1400px;
         margin: 0 auto;
-        background: white;
+        background: var(--bg-secondary);
         border-radius: 20px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 20px 60px var(--shadow-color);
         padding: 40px;
       }
 
       h1 {
-        color: #ff8c1a;
+        color: var(--accent-orange);
         text-align: center;
         margin-bottom: 30px;
         font-size: 2.5em;
@@ -62,36 +76,39 @@
       .section {
         margin-bottom: 30px;
         padding: 25px;
-        background: #f8f9fa;
+        background: var(--bg-card);
         border-radius: 15px;
       }
 
       .section h2 {
-        color: #333;
+        color: var(--text-primary);
         margin-bottom: 20px;
         font-size: 1.5em;
-        border-bottom: 3px solid #ff8c1a;
+        border-bottom: 3px solid var(--accent-orange);
         padding-bottom: 10px;
       }
 
       .two-column {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 2fr;
         gap: 30px;
       }
 
       .three-column {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 15px;
       }
 
       @media (max-width: 1200px) {
         .two-column {
           grid-template-columns: 1fr;
         }
+      }
+
+      @media (max-width: 992px) {
         .three-column {
-          grid-template-columns: 1fr;
+          grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
         }
       }
 
@@ -103,11 +120,6 @@
         .container {
           padding: 20px;
           border-radius: 15px;
-        }
-
-        h1 {
-          font-size: 1.8em;
-          margin-bottom: 20px;
         }
 
         .section {
@@ -124,59 +136,9 @@
           font-size: 14px;
         }
 
-        .btn-small {
-          padding: 8px 12px;
-          font-size: 13px;
-        }
-
-        .button-group {
-          flex-direction: column;
-          align-items: stretch;
-        }
-
-        .button-group .btn {
-          width: 100%;
-        }
-
-        .add-staff-btn {
-          flex-direction: column;
-        }
-
-        .add-staff-btn .btn {
-          width: 100%;
-        }
-
-        .month-selector {
-          flex-direction: column;
-          align-items: stretch;
-          gap: 8px;
-        }
-
-        .month-selector input {
-          width: 100%;
-        }
-
-        .result-table {
-          font-size: 0.85em;
-        }
-
-        .result-table th,
-        .result-table td {
-          padding: 8px 6px;
-        }
-
-        .schedule-item {
-          flex-direction: column;
+        .three-column {
+          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
           gap: 10px;
-          align-items: stretch;
-        }
-
-        .schedule-actions {
-          flex-direction: column;
-        }
-
-        .schedule-actions .btn {
-          width: 100%;
         }
       }
 
@@ -189,18 +151,9 @@
           font-size: 1.1em;
         }
 
-        .role-badge {
-          font-size: 0.75em;
-          padding: 4px 8px;
-        }
-
-        .unavailable-dates {
-          grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        }
-
-        .date-checkbox {
-          padding: 6px;
-          font-size: 0.85em;
+        .three-column {
+          grid-template-columns: 1fr;
+          gap: 10px;
         }
       }
 
@@ -225,43 +178,79 @@
       .staff-input {
         display: grid;
         gap: 15px;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       }
 
       .staff-item {
         display: flex;
         align-items: center;
-        gap: 15px;
-        padding: 15px;
-        background: white;
+        gap: 10px;
+        padding: 10px;
+        background: var(--bg-secondary);
         border-radius: 10px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
       }
 
       .staff-item label {
         font-weight: 600;
         min-width: 80px;
-        color: #555;
+        color: var(--text-secondary);
       }
 
       .staff-item input {
         flex: 1;
-        min-width: 150px;
+        min-width: 100px;
         padding: 10px;
-        border: 2px solid #ddd;
+        border: 2px solid var(--border-color);
         border-radius: 8px;
         font-size: 16px;
         transition: border-color 0.3s;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
       }
 
       .staff-item input:focus {
         outline: none;
-        border-color: #ff8c1a;
+        border-color: var(--accent-orange);
+      }
+
+      .location-input {
+        flex: 1;
+        min-width: 150px;
+        padding: 10px;
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+      }
+
+      .location-input:focus {
+        outline: none;
+        border-color: var(--accent-orange);
+      }
+
+      .sunday-schedule-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 12px;
+        background: var(--bg-secondary);
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        margin-bottom: 12px;
+      }
+
+      .sunday-schedule-item label {
+        font-weight: 600;
+        min-width: 120px;
+        color: var(--text-secondary);
       }
 
       .staff-item button {
-        padding: 8px 15px;
+        padding: 8px 12px;
         background: #e74c3c;
         color: white;
         border: 1px solid transparent;
@@ -270,41 +259,11 @@
         font-weight: 600;
         transition: all 0.3s;
         white-space: nowrap;
+        flex-shrink: 0;
       }
 
       .staff-item button:hover {
         background: #c0392b;
-      }
-
-      @media (max-width: 768px) {
-        .staff-item {
-          gap: 10px;
-          padding: 12px;
-        }
-
-        .staff-item .role-badge {
-          order: 1;
-          width: 100%;
-          text-align: center;
-        }
-
-        .staff-item label {
-          order: 2;
-          min-width: 60px;
-        }
-
-        .staff-item input {
-          order: 3;
-          flex: 1;
-          min-width: 0;
-          width: 100%;
-        }
-
-        .staff-item button {
-          order: 4;
-          padding: 8px 12px;
-          font-size: 14px;
-        }
       }
 
       .role-badge {
@@ -337,7 +296,7 @@
       }
 
       .location-card {
-        background: white;
+        background: var(--bg-secondary);
         padding: 12px 15px;
         border-radius: 8px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -352,11 +311,12 @@
         flex: 1;
         min-width: 150px;
         padding: 8px 12px;
-        border: 2px solid #ff8c1a;
+        border: 2px solid var(--accent-orange);
         border-radius: 6px;
         font-size: 0.95em;
         font-weight: 600;
-        color: #333;
+        color: var(--text-primary);
+        background: var(--bg-secondary);
       }
 
       .location-card .location-name-input:focus {
@@ -388,100 +348,6 @@
         border: none;
       }
 
-      .location-card .remove-location-btn {
-        padding: 6px 12px;
-        background: #e74c3c;
-        color: white;
-        border: 1px solid transparent;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 0.85em;
-        transition: all 0.3s;
-        white-space: nowrap;
-      }
-
-      .location-card .remove-location-btn:hover {
-        background: #c0392b;
-      }
-
-      @media (max-width: 768px) {
-        .location-card {
-          padding: 10px 12px;
-          flex-direction: column;
-          align-items: stretch;
-        }
-
-        .location-card .location-name-input {
-          width: 100%;
-          min-width: 0;
-        }
-
-        .location-card .remove-location-btn {
-          width: 100%;
-        }
-      }
-
-      .week-schedule-selector {
-        display: grid;
-        gap: 10px;
-      }
-
-      .week-schedule-item {
-        display: grid;
-        grid-template-columns: 60px 1fr 1fr;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 12px;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-      }
-
-      .week-schedule-item label {
-        font-weight: 600;
-        color: #555;
-        font-size: 0.9em;
-      }
-
-      .week-schedule-item select {
-        padding: 8px 10px;
-        border: 2px solid #ddd;
-        border-radius: 6px;
-        font-size: 0.9em;
-        cursor: pointer;
-        background: white;
-      }
-
-      .week-schedule-item select:focus {
-        outline: none;
-        border-color: #ff8c1a;
-      }
-
-      @media (max-width: 768px) {
-        .week-schedule-item {
-          grid-template-columns: 50px 1fr;
-          gap: 8px;
-        }
-
-        .week-schedule-item label {
-          font-size: 0.85em;
-        }
-
-        .week-schedule-item select {
-          font-size: 0.85em;
-          padding: 6px 8px;
-        }
-
-        .week-schedule-item select:first-of-type {
-          grid-column: 2;
-        }
-
-        .week-schedule-item select:last-of-type {
-          grid-column: 1 / -1;
-        }
-      }
-
       .month-selector {
         display: flex;
         gap: 10px;
@@ -490,15 +356,17 @@
 
       .month-selector input {
         padding: 10px;
-        border: 2px solid #ddd;
+        border: 2px solid var(--border-color);
         border-radius: 8px;
         font-size: 16px;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
       }
 
       .unavailable-dates {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 10px;
+        grid-template-columns: 1fr;
+        gap: 8px;
         margin-top: 15px;
       }
 
@@ -507,7 +375,7 @@
         align-items: center;
         gap: 8px;
         padding: 8px;
-        background: white;
+        background: var(--bg-secondary);
         border-radius: 8px;
         cursor: pointer;
         transition: all 0.3s;
@@ -517,7 +385,12 @@
 
       .date-checkbox:hover {
         background: #fff4e6;
-        border-color: #ff8c1a;
+        border-color: var(--accent-orange);
+      }
+
+      .date-checkbox.conflict-warning {
+        background: #ffe5e5;
+        border-color: #e74c3c;
       }
 
       .date-checkbox input[type="checkbox"] {
@@ -540,13 +413,24 @@
       }
 
       .btn-primary {
-        background: #ff8c1a;
+        background: var(--accent-orange);
         box-shadow: 0 5px 15px rgba(255, 140, 26, 0.4);
       }
 
       .btn-primary:hover {
-        background: #e67a0a;
+        background: var(--accent-orange-dark);
         box-shadow: 0 8px 20px rgba(230, 122, 10, 0.6);
+        transform: translateY(-2px);
+      }
+
+      .btn-theme {
+        background: #2a2d5f;
+        box-shadow: 0 5px 15px rgba(42, 45, 95, 0.4);
+      }
+
+      .btn-theme:hover {
+        background: #1a1d3f;
+        box-shadow: 0 8px 20px rgba(26, 29, 63, 0.6);
       }
 
       .btn-secondary {
@@ -556,6 +440,7 @@
 
       .btn-secondary:hover {
         background: #7f8c8d;
+        transform: translateY(-2px);
       }
 
       .btn-success {
@@ -565,23 +450,12 @@
 
       .btn-success:hover {
         background: #229954;
+        transform: translateY(-2px);
       }
 
       .btn-small {
         padding: 8px 16px;
         font-size: 14px;
-      }
-
-      .btn-lesson {
-        background: #3498db;
-        color: white;
-        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
-      }
-
-      .btn-lesson:hover {
-        background: #2980b9;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(41, 128, 185, 0.6);
       }
 
       .btn-general {
@@ -622,12 +496,14 @@
 
       .result-table td {
         padding: 10px 12px;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid var(--border-color);
         font-size: 0.9em;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
       }
 
       .result-table tr:hover {
-        background: #f5f5f5;
+        background: var(--bg-card);
       }
 
       .editable-cell {
@@ -640,24 +516,6 @@
         background-color: #fff4e6 !important;
       }
 
-      .meeting-type {
-        display: inline-block;
-        padding: 4px 10px;
-        border-radius: 5px;
-        font-size: 0.85em;
-        font-weight: 600;
-      }
-
-      .meeting-regular {
-        background: #ffe5e5;
-        color: #c0392b;
-      }
-
-      .meeting-casual {
-        background: #e5f5ff;
-        color: #2980b9;
-      }
-
       .alert {
         padding: 15px 20px;
         border-radius: 10px;
@@ -668,7 +526,7 @@
       .alert-success {
         background: #fff4e6;
         color: #d46b08;
-        border: 2px solid #ff8c1a;
+        border: 2px solid var(--accent-orange);
       }
 
       .alert-error {
@@ -681,6 +539,12 @@
         background: #d1ecf1;
         color: #0c5460;
         border: 2px solid #bee5eb;
+      }
+
+      .alert-warning {
+        background: #fff3cd;
+        color: #856404;
+        border: 2px solid #ffc107;
       }
 
       #result {
@@ -697,14 +561,14 @@
 
       .stat-card {
         padding: 8px;
-        background: white;
+        background: var(--bg-secondary);
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         text-align: center;
       }
 
       .stat-card h3 {
-        color: #ff8c1a;
+        color: var(--accent-orange);
         font-size: 1.25em;
         margin-bottom: 4px;
       }
@@ -712,7 +576,7 @@
       .stat-card .number {
         font-size: 1em;
         font-weight: 700;
-        color: #333;
+        color: var(--text-primary);
       }
 
       .saved-schedules {
@@ -721,7 +585,7 @@
 
       .schedule-item {
         padding: 15px;
-        background: white;
+        background: var(--bg-secondary);
         border-radius: 10px;
         margin-bottom: 10px;
         display: flex;
@@ -739,12 +603,12 @@
       }
 
       .schedule-info h4 {
-        color: #333;
+        color: var(--text-primary);
         margin-bottom: 5px;
       }
 
       .schedule-info p {
-        color: #666;
+        color: var(--text-secondary);
         font-size: 0.9em;
       }
 
@@ -759,7 +623,7 @@
 
       .info-box {
         background: #fff4e6;
-        border: 2px solid #ff8c1a;
+        border: 2px solid var(--accent-orange);
         border-radius: 10px;
         padding: 12px 15px;
         margin-top: 10px;
@@ -775,17 +639,63 @@
         width: 100%;
         height: 200px;
         padding: 12px;
-        border: 2px solid #ddd;
+        border: 2px solid var(--border-color);
         border-radius: 8px;
         font-size: 13px;
         font-family: "Courier New", monospace;
         resize: vertical;
         line-height: 1.5;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
       }
 
       .config-textarea:focus {
         outline: none;
         border-color: #3498db;
+      }
+
+      .loading-spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 0.8s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .tooltip {
+        position: relative;
+        display: inline-block;
+      }
+
+      .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 200px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 8px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -100px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 0.85em;
+      }
+
+      .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
       }
     </style>
   </head>
@@ -796,6 +706,7 @@
           src="squashus-logo.png"
           alt="SQUASHUS"
           style="height: 80px; width: auto"
+          onerror="this.style.display='none'"
         />
         <span>스케줄러</span>
       </h1>
@@ -991,38 +902,31 @@
       <div class="section">
         <h2>운영진 정보 (자동 불러오기)</h2>
 
-        <div class="staff-item">
-          <span class="role-badge role-leader">모임장</span>
-          <label>이름:</label>
-          <input type="text" id="leader" placeholder="모임장 이름" />
+        <!-- 운영진 목록 (모임장 포함) -->
+        <div id="staffList" class="staff-input">
+          <!-- 모임장 (고정) -->
+          <div class="staff-item" id="leader">
+            <span class="role-badge role-leader">모임장</span>
+            <input
+              type="text"
+              placeholder="모임장 이름"
+              data-id="leader"
+              data-role="leader"
+              oninput="updateSundayList()"
+            />
+          </div>
         </div>
 
-        <div style="margin-top: 20px">
-          <h3 style="margin-bottom: 15px; color: #555; font-size: 1.1em">
-            운영진 목록
-          </h3>
-          <div id="staffList" class="staff-input"></div>
+        <div class="add-staff-btn">
+          <button class="btn btn-general btn-small" onclick="addStaff('staff')">
+            운영진 추가
+          </button>
+        </div>
 
-          <div class="add-staff-btn">
-            <button
-              class="btn btn-lesson btn-small"
-              onclick="addStaff('lesson')"
-            >
-              레슨 운영진 추가
-            </button>
-            <button
-              class="btn btn-general btn-small"
-              onclick="addStaff('general')"
-            >
-              일반 운영진 추가
-            </button>
-          </div>
-
-          <div style="margin-top: 20px; text-align: center">
-            <button class="btn btn-success" onclick="saveStaffData()">
-              운영진 목록 저장
-            </button>
-          </div>
+        <div style="margin-top: 20px; text-align: center">
+          <button class="btn btn-success" onclick="saveStaffData()">
+            운영진 목록 저장
+          </button>
         </div>
       </div>
 
@@ -1044,24 +948,18 @@
 
       <div class="two-column">
         <div class="section">
-          <h2>지점 관리</h2>
-          <div id="locationList" style="display: grid; gap: 15px"></div>
-          <div style="margin-top: 15px">
-            <button class="btn btn-primary btn-small" onclick="addLocation()">
-              지점 추가
-            </button>
-          </div>
+          <h2>[월별] 일요일별 운영 지점</h2>
+          <p style="margin-bottom: 15px; color: #666; font-size: 0.9em">
+            각 일요일에 운영할 지점을 입력하세요. "강북"이 포함되면 모임장이
+            자동 참석합니다.
+          </p>
+          <div id="sundaySchedule" class="sunday-schedule-selector"></div>
         </div>
 
         <div class="section">
-          <h2>[월별] 주차별 운영 스케줄</h2>
-          <div id="weeklySchedule" class="week-schedule-selector"></div>
+          <h2>[월별] 운영진별 불가능한 날짜</h2>
+          <div id="unavailableDates"></div>
         </div>
-      </div>
-
-      <div class="section">
-        <h2>[월별] 운영진별 불가능한 날짜</h2>
-        <div id="unavailableDates"></div>
       </div>
 
       <div class="button-group">
@@ -1075,7 +973,7 @@
         >
           현재 월 설정 불러오기
         </button>
-        <button class="btn btn-primary" onclick="generateSchedule()">
+        <button class="btn btn-theme" onclick="generateSchedule()">
           스케줄 자동 생성
         </button>
         <button class="btn btn-secondary" onclick="resetForm()">
@@ -1099,46 +997,86 @@
           >
             스케줄 저장
           </button>
+          <button
+            class="btn btn-primary"
+            type="button"
+            onclick="exportToExcel()"
+          >
+            엑셀로 내보내기
+          </button>
+          <button class="btn btn-theme" type="button" onclick="shareToKakao()">
+            카카오톡 공유
+          </button>
         </div>
       </div>
     </div>
 
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
+    <!-- SheetJS for Excel Export -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+    <!-- Kakao SDK -->
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+
     <script>
       // ============================================
-      // Firebase 설정
+      // 전역 변수 및 초기화
       // ============================================
       let firebaseConfigData = null;
-
-      // 전역 변수
       let scheduleData = [];
       let staffCounter = 0;
       let locationCounter = 0;
+      let sundayLocations = {};
       let db = null;
       let firebaseConnected = false;
+      let connectionTimeout = null;
 
-      // 초기화 - 현재 월을 기본값으로 설정 (사파리 호환)
+      // 초기화 - 현재 월의 마지막 일요일이 지나면 다음 달 자동 로드
       const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, "0");
-      document.getElementById("targetMonth").value = `${year}-${month}`;
+      let year = now.getFullYear();
+      let month = now.getMonth() + 1; // 1~12
 
-      // 월 선택 시 일요일 목록 업데이트
+      // 현재 월의 모든 일요일을 가져와서 마지막 일요일 확인
+      const sundaysThisMonth = getSundaysInMonth(year, month);
+
+      if (sundaysThisMonth.length > 0) {
+        const lastSunday = sundaysThisMonth[sundaysThisMonth.length - 1];
+
+        // 오늘이 마지막 일요일보다 나중이면 다음 달로 설정
+        if (now > lastSunday) {
+          month += 1;
+          if (month > 12) {
+            month = 1;
+            year += 1;
+          }
+        }
+      }
+
+      const monthStr = String(month).padStart(2, "0");
+      document.getElementById("targetMonth").value = `${year}-${monthStr}`;
+
+      // 월 선택 시 업데이트
       document
         .getElementById("targetMonth")
         .addEventListener("change", function () {
-          updateWeeklySchedule();
+          updateSundaySchedule();
           updateSundayList();
           loadMonthSettings();
         });
 
       // 페이지 로드 시 기본 상태 설정
       window.addEventListener("load", function () {
-        updateWeeklySchedule();
+        updateSundaySchedule();
         updateSundayList();
         loadFirebaseConfigFromLocal();
+
+        // Kakao SDK 초기화 (여기에 본인의 JavaScript 키를 입력하세요)
+        if (typeof Kakao !== "undefined" && Kakao) {
+          // Kakao.init('YOUR_JAVASCRIPT_KEY'); // 실제 키로 교체 필요
+        }
       });
 
       // ============================================
@@ -1303,6 +1241,10 @@
         firebaseConnected = false;
         db = null;
 
+        if (connectionTimeout) {
+          clearTimeout(connectionTimeout);
+        }
+
         const statusDiv = document.getElementById("firebaseStatus");
         statusDiv.className = "firebase-status firebase-disconnected";
         statusDiv.innerHTML =
@@ -1320,12 +1262,27 @@
           return;
         }
 
+        // 타임아웃 설정
+        connectionTimeout = setTimeout(() => {
+          if (!firebaseConnected) {
+            const statusDiv = document.getElementById("firebaseStatus");
+            statusDiv.className = "firebase-status firebase-disconnected";
+            statusDiv.innerHTML =
+              "서버 연결 시간 초과<br><small>설정을 확인하고 다시 시도해주세요</small>";
+            alert("서버 연결 시간이 초과되었습니다. 설정을 확인해주세요.");
+          }
+        }, 10000);
+
         try {
           if (firebase.apps.length === 0) {
             firebase.initializeApp(firebaseConfigData);
           }
           db = firebase.database();
           firebaseConnected = true;
+
+          if (connectionTimeout) {
+            clearTimeout(connectionTimeout);
+          }
 
           const statusDiv = document.getElementById("firebaseStatus");
           statusDiv.className = "firebase-status firebase-connected";
@@ -1341,6 +1298,11 @@
           loadStaffData();
         } catch (error) {
           console.error("서버 연결 오류:", error);
+
+          if (connectionTimeout) {
+            clearTimeout(connectionTimeout);
+          }
+
           const statusDiv = document.getElementById("firebaseStatus");
           statusDiv.className = "firebase-status firebase-disconnected";
           statusDiv.innerHTML = `서버 연결 실패<br><small>${error.message}</small>`;
@@ -1387,7 +1349,6 @@
         nameInput.placeholder = "지점명 입력 (예: 중랑구점)";
         nameInput.value = defaultName;
         nameInput.dataset.locationId = locationId;
-        nameInput.addEventListener("change", updateWeeklySchedule);
 
         const colorPicker = document.createElement("input");
         colorPicker.type = "color";
@@ -1398,10 +1359,16 @@
         const removeBtn = document.createElement("button");
         removeBtn.className = "remove-location-btn";
         removeBtn.textContent = "삭제";
+        removeBtn.style.padding = "6px 12px";
+        removeBtn.style.background = "#e74c3c";
+        removeBtn.style.color = "white";
+        removeBtn.style.border = "none";
+        removeBtn.style.borderRadius = "6px";
+        removeBtn.style.cursor = "pointer";
+        removeBtn.style.fontWeight = "600";
         removeBtn.onclick = function () {
           if (confirm("이 지점을 삭제하시겠습니까?")) {
             locationList.removeChild(locationCard);
-            updateWeeklySchedule();
           }
         };
 
@@ -1432,86 +1399,85 @@
         return locations;
       }
 
-      function updateWeeklySchedule() {
-        const weeklyScheduleDiv = document.getElementById("weeklySchedule");
-        weeklyScheduleDiv.innerHTML = "";
+      function updateSundaySchedule() {
+        const sundayScheduleDiv = document.getElementById("sundaySchedule");
+        sundayScheduleDiv.innerHTML = "";
 
-        const maxWeeks = getMaxWeeksInMonth();
-        const locations = getAllLocations();
-
-        if (Object.keys(locations).length === 0) {
-          weeklyScheduleDiv.innerHTML =
-            '<p style="color: #666;">지점을 먼저 추가해주세요.</p>';
+        const monthInput = document.getElementById("targetMonth").value;
+        if (!monthInput) {
+          sundayScheduleDiv.innerHTML =
+            '<p style="color: #666;">대상 월을 먼저 선택해주세요.</p>';
           return;
         }
 
-        for (let week = 1; week <= maxWeeks; week++) {
-          const weekItem = document.createElement("div");
-          weekItem.className = "week-schedule-item";
+        const [year, month] = monthInput.split("-").map(Number);
+        const sundays = getSundaysInMonth(year, month);
+
+        if (sundays.length === 0) {
+          sundayScheduleDiv.innerHTML =
+            '<p style="color: #666;">해당 월에 일요일이 없습니다.</p>';
+          return;
+        }
+
+        sundays.forEach((sunday, index) => {
+          const sundayItem = document.createElement("div");
+          sundayItem.className = "sunday-schedule-item";
+
+          const dateStr = `${sunday.getMonth() + 1}/${sunday.getDate()}`;
+          const fullDateStr = `${year}-${String(sunday.getMonth() + 1).padStart(
+            2,
+            "0"
+          )}-${String(sunday.getDate()).padStart(2, "0")}`;
 
           const label = document.createElement("label");
-          label.textContent = `${week}주차:`;
+          label.textContent = `${dateStr} (${getWeekOfMonth(sunday)}주차):`;
 
-          const locationSelect = document.createElement("select");
-          locationSelect.dataset.week = week;
-          locationSelect.className = "location-select";
+          const locationInput = document.createElement("input");
+          locationInput.type = "text";
+          locationInput.className = "location-input";
+          locationInput.placeholder = "운영 지점 입력 (예: 강남구)";
+          locationInput.dataset.date = fullDateStr;
 
-          const noneOption = document.createElement("option");
-          noneOption.value = "none";
-          noneOption.textContent = "운영 안함";
-          locationSelect.appendChild(noneOption);
+          if (sundayLocations && sundayLocations[fullDateStr]) {
+            locationInput.value = sundayLocations[fullDateStr];
+          }
 
-          Object.entries(locations).forEach(([id, location]) => {
-            const option = document.createElement("option");
-            option.value = id;
-            option.textContent = location.name;
-            locationSelect.appendChild(option);
+          locationInput.addEventListener("input", function () {
+            if (!sundayLocations) sundayLocations = {};
+            sundayLocations[this.dataset.date] = this.value.trim();
           });
 
-          const meetingTypeSelect = document.createElement("select");
-          meetingTypeSelect.dataset.week = week;
-          meetingTypeSelect.className = "meeting-type-select";
-
-          const regularOption = document.createElement("option");
-          regularOption.value = "regular";
-          regularOption.textContent = "정기모임";
-          meetingTypeSelect.appendChild(regularOption);
-
-          const casualOption = document.createElement("option");
-          casualOption.value = "casual";
-          casualOption.textContent = "자율모임";
-          meetingTypeSelect.appendChild(casualOption);
-
-          weekItem.appendChild(label);
-          weekItem.appendChild(locationSelect);
-          weekItem.appendChild(meetingTypeSelect);
-          weeklyScheduleDiv.appendChild(weekItem);
-        }
+          sundayItem.appendChild(label);
+          sundayItem.appendChild(locationInput);
+          sundayScheduleDiv.appendChild(sundayItem);
+        });
       }
 
-      function addStaff(type) {
+      function addStaff(role = "staff") {
+        // 모임장은 추가 불가 (고정됨)
+        if (role === "leader") {
+          alert("모임장은 고정되어 있습니다.");
+          return;
+        }
+
         staffCounter++;
         const staffList = document.getElementById("staffList");
-        const staffId = `staff_${type}_${staffCounter}`;
+        const staffId = `staff_${staffCounter}`;
 
         const staffItem = document.createElement("div");
         staffItem.className = "staff-item";
         staffItem.id = staffId;
 
+        // 역할 배지
         const badge = document.createElement("span");
-        badge.className = `role-badge role-${type}`;
-        badge.textContent = type === "lesson" ? "레슨" : "일반";
-
-        const label = document.createElement("label");
-        label.textContent = "이름:";
+        badge.className = "role-badge role-general";
+        badge.textContent = "운영진";
 
         const input = document.createElement("input");
         input.type = "text";
-        input.placeholder = `${
-          type === "lesson" ? "레슨" : "일반"
-        } 운영진 이름`;
-        input.dataset.type = type;
+        input.placeholder = "운영진 이름";
         input.dataset.id = staffId;
+        input.dataset.role = role;
         input.addEventListener("input", updateSundayList);
 
         const removeBtn = document.createElement("button");
@@ -1524,7 +1490,6 @@
         };
 
         staffItem.appendChild(badge);
-        staffItem.appendChild(label);
         staffItem.appendChild(input);
         staffItem.appendChild(removeBtn);
 
@@ -1536,21 +1501,24 @@
       function getAllStaff() {
         const staff = {};
 
-        const leaderName = document.getElementById("leader").value.trim();
-        if (leaderName) {
-          staff["leader"] = {
-            name: leaderName,
-            type: "leader",
-          };
+        // 고정된 모임장 input 처리
+        const leaderInput = document.querySelector("#leader input");
+        if (leaderInput) {
+          const leaderName = leaderInput.value.trim();
+          if (leaderName) {
+            staff["leader"] = {
+              name: leaderName,
+            };
+          }
         }
 
+        // 일반 운영진 input 처리
         const staffInputs = document.querySelectorAll("#staffList input");
         staffInputs.forEach((input) => {
           const name = input.value.trim();
           if (name) {
             staff[input.dataset.id] = {
               name: name,
-              type: input.dataset.type,
             };
           }
         });
@@ -1581,14 +1549,14 @@
 
         Object.entries(allStaff).forEach(([staffId, staffInfo]) => {
           const staffDiv = document.createElement("div");
-          staffDiv.style.padding = "15px";
-          staffDiv.style.background = "white";
+          staffDiv.style.padding = "10px";
+          staffDiv.style.background = "var(--bg-secondary)";
           staffDiv.style.borderRadius = "10px";
 
           const title = document.createElement("h3");
           title.textContent = staffInfo.name;
           title.style.marginBottom = "10px";
-          title.style.color = "#ff8c1a";
+          title.style.color = "var(--accent-orange)";
           title.style.fontSize = "1em";
           staffDiv.appendChild(title);
 
@@ -1609,6 +1577,7 @@
 
             checkbox.value = localDateStr;
             checkbox.dataset.staff = staffId;
+            checkbox.dataset.date = localDateStr;
 
             if (
               unavailableDates[staffId] &&
@@ -1617,6 +1586,9 @@
             ) {
               checkbox.checked = true;
             }
+
+            // 체크박스 변경 시 충돌 경고
+            checkbox.addEventListener("change", checkConflicts);
 
             const dateText = document.createElement("span");
             dateText.textContent = `${
@@ -1633,6 +1605,59 @@
         });
 
         container.appendChild(gridContainer);
+
+        // 초기 충돌 체크
+        checkConflicts();
+      }
+
+      // 배치 충돌 사전 경고
+      function checkConflicts() {
+        const monthInput = document.getElementById("targetMonth").value;
+        if (!monthInput) return;
+
+        const [year, month] = monthInput.split("-").map(Number);
+        const sundays = getSundaysInMonth(year, month);
+        const allStaff = getAllStaff();
+
+        // 각 날짜별로 불가능한 운영진 수 카운트
+        const unavailableCount = {};
+        sundays.forEach((sunday) => {
+          const dateStr = `${sunday.getFullYear()}-${String(
+            sunday.getMonth() + 1
+          ).padStart(2, "0")}-${String(sunday.getDate()).padStart(2, "0")}`;
+          unavailableCount[dateStr] = 0;
+        });
+
+        // 체크된 항목 카운트 (모임장 제외)
+        document
+          .querySelectorAll('.date-checkbox input[type="checkbox"]:checked')
+          .forEach((checkbox) => {
+            const staffId = checkbox.dataset.staff;
+            // 모임장은 카운트에서 제외
+            if (staffId === "leader") return;
+
+            const date = checkbox.dataset.date;
+            if (unavailableCount[date] !== undefined) {
+              unavailableCount[date]++;
+            }
+          });
+
+        // 모든 운영진이 불가능한 날짜만 표시 (모임장 제외)
+        const totalStaff = Object.keys(allStaff).length - 1; // 모임장 제외
+        document.querySelectorAll(".date-checkbox").forEach((label) => {
+          const checkbox = label.querySelector('input[type="checkbox"]');
+          const date = checkbox.dataset.date;
+
+          label.classList.remove("conflict-warning");
+
+          // 한 명도 배치 불가능한 경우 (모든 일반 운영진이 불가능)
+          if (unavailableCount[date] === totalStaff && totalStaff > 0) {
+            label.classList.add("conflict-warning");
+            label.title = "⚠️ 이 날은 배치 가능한 운영진이 한 명도 없습니다!";
+          } else {
+            label.title = "";
+          }
+        });
       }
 
       function shuffleArray(array) {
@@ -1688,24 +1713,6 @@
         return Math.floor(diffDays / 7) + 1;
       }
 
-      function getWeeklyScheduleSettings() {
-        const settings = {};
-        const weekItems = document.querySelectorAll(".week-schedule-item");
-
-        weekItems.forEach((item) => {
-          const locationSelect = item.querySelector(".location-select");
-          const meetingTypeSelect = item.querySelector(".meeting-type-select");
-          const week = parseInt(locationSelect.dataset.week);
-
-          settings[week] = {
-            locationId: locationSelect.value,
-            meetingType: meetingTypeSelect.value,
-          };
-        });
-
-        return settings;
-      }
-
       // ============================================
       // 데이터 저장/로드
       // ============================================
@@ -1749,18 +1756,29 @@
               return;
             }
 
-            document.getElementById("staffList").innerHTML = "";
+            // 모임장을 제외한 운영진만 초기화
+            const staffItems = document.querySelectorAll(
+              "#staffList .staff-item:not(#leader)"
+            );
+            staffItems.forEach((item) => item.remove());
             staffCounter = 0;
 
             Object.entries(data).forEach(([staffId, staffInfo]) => {
               if (staffId === "leader") {
-                document.getElementById("leader").value = staffInfo.name;
+                // 모임장 이름 설정 (고정 input에)
+                const leaderInput = document.querySelector("#leader input");
+                if (leaderInput) {
+                  leaderInput.value = staffInfo.name;
+                }
               } else {
-                addStaff(staffInfo.type);
+                // 일반 운영진 추가
+                addStaff("staff");
                 const inputs = document.querySelectorAll("#staffList input");
                 const lastInput = inputs[inputs.length - 1];
-                lastInput.value = staffInfo.name;
-                lastInput.dataset.id = staffId;
+                if (lastInput) {
+                  lastInput.value = staffInfo.name;
+                  lastInput.dataset.id = staffId;
+                }
               }
             });
 
@@ -1797,12 +1815,11 @@
           });
 
         const locations = getAllLocations();
-        const weeklySchedule = getWeeklyScheduleSettings();
 
         const data = {
           unavailableDates: unavailable,
           locations: locations,
-          weeklySchedule: weeklySchedule,
+          sundayLocations: sundayLocations,
           updatedAt: new Date().toISOString(),
         };
 
@@ -1838,45 +1855,9 @@
               return;
             }
 
-            // 지점 정보 로드
-            document.getElementById("locationList").innerHTML = "";
-            locationCounter = 0;
-            if (data.locations) {
-              Object.entries(data.locations).forEach(
-                ([locationId, locationData]) => {
-                  addLocation(locationData.name, locationData.color);
-                  const lastCard = document.querySelector(
-                    ".location-card:last-child"
-                  );
-                  lastCard.id = locationId;
-                  lastCard.querySelector(
-                    ".location-name-input"
-                  ).dataset.locationId = locationId;
-                }
-              );
-            }
-
-            // 주차별 스케줄 업데이트
-            updateWeeklySchedule();
-
-            // 주차별 스케줄 설정 로드
-            if (data.weeklySchedule) {
-              Object.entries(data.weeklySchedule).forEach(
-                ([week, schedule]) => {
-                  const weekItem = document.querySelector(
-                    `.week-schedule-item:nth-child(${week})`
-                  );
-                  if (weekItem) {
-                    const locationSelect =
-                      weekItem.querySelector(".location-select");
-                    const meetingTypeSelect = weekItem.querySelector(
-                      ".meeting-type-select"
-                    );
-                    locationSelect.value = schedule.locationId;
-                    meetingTypeSelect.value = schedule.meetingType;
-                  }
-                }
-              );
+            if (data.sundayLocations) {
+              sundayLocations = data.sundayLocations;
+              updateSundaySchedule();
             }
 
             updateSundayList(data.unavailableDates || {});
@@ -1895,7 +1876,6 @@
 
             if (!allSettings) {
               console.log("저장된 월별 설정이 전혀 없습니다.");
-              updateWeeklySchedule();
               updateSundayList();
               return;
             }
@@ -1907,7 +1887,6 @@
 
             if (pastMonths.length === 0) {
               console.log("과거 설정을 찾을 수 없습니다.");
-              updateWeeklySchedule();
               updateSundayList();
               return;
             }
@@ -1919,44 +1898,22 @@
               `${nearestPastMonth}월의 설정을 불러왔습니다. (${currentMonth}월에 적용)`
             );
 
-            // 지점 정보만 로드
-            document.getElementById("locationList").innerHTML = "";
-            locationCounter = 0;
+            updateSundaySchedule();
 
-            if (pastData.locations) {
-              Object.entries(pastData.locations).forEach(
-                ([locationId, locationData]) => {
-                  addLocation(locationData.name, locationData.color);
-                  const lastCard = document.querySelector(
-                    ".location-card:last-child"
-                  );
-                  lastCard.id = locationId;
-                  lastCard.querySelector(
-                    ".location-name-input"
-                  ).dataset.locationId = locationId;
-                }
-              );
-
-              updateWeeklySchedule();
-
-              alert(
-                `${currentMonth}월 설정이 없어 ${nearestPastMonth}월의 지점 설정을 불러왔습니다.\n주차별 스케줄과 휴무일은 초기화되었으니 다시 설정해주세요.`
-              );
-            } else {
-              updateWeeklySchedule();
-            }
+            alert(
+              `${currentMonth}월 설정이 없어 ${nearestPastMonth}월의 설정을 참고했습니다.\n주차별 스케줄과 휴무일은 초기화되었으니 다시 설정해주세요.`
+            );
 
             updateSundayList();
           })
           .catch((error) => {
             console.error("과거 설정 불러오기 실패:", error);
-            updateWeeklySchedule();
             updateSundayList();
           });
       }
 
       // ============================================
-      // 스케줄 생성 로직
+      // 스케줄 생성 로직 (개선된 버전)
       // ============================================
 
       function generateSchedule() {
@@ -1973,10 +1930,10 @@
         }
 
         const partnerStaffList = Object.entries(allStaff).filter(
-          ([id, info]) => info.type === "general" || info.type === "lesson"
+          ([id, info]) => id !== "leader"
         );
         if (partnerStaffList.length === 0) {
-          alert("일반 또는 레슨 운영진을 최소 1명 이상 추가해주세요!");
+          alert("운영진을 최소 1명 이상 추가해주세요!");
           return;
         }
 
@@ -2000,167 +1957,110 @@
 
         const [year, month] = monthInput.split("-").map(Number);
         const sundays = getSundaysInMonth(year, month);
-        const weeklySchedule = getWeeklyScheduleSettings();
-        const locations = getAllLocations();
 
-        const assignments = [];
-        const convertedToAutoSchedule = []; // 정기→자율 전환 목록
-
+        const meetings = [];
         sundays.forEach((sunday) => {
-          const week = getWeekOfMonth(sunday);
           const y = sunday.getFullYear();
           const m = String(sunday.getMonth() + 1).padStart(2, "0");
           const d = String(sunday.getDate()).padStart(2, "0");
           const dateStr = `${y}-${m}-${d}`;
 
-          const schedule = weeklySchedule[week];
-          if (!schedule || schedule.locationId === "none") {
-            return;
-          }
-
-          const locationData = locations[schedule.locationId];
-          if (!locationData) {
-            return;
-          }
-
-          const meetingType =
-            schedule.meetingType === "regular" ? "정기" : "자율";
-
-          if (meetingType === "정기") {
-            const leaderAvailable = !unavailable["leader"].includes(dateStr);
-
-            // 모임장이 불가능한 경우 자율모임으로 전환
-            if (!leaderAvailable) {
-              let availableStaff = Object.entries(allStaff).filter(
-                ([id, info]) => !unavailable[id].includes(dateStr)
-              );
-
-              if (availableStaff.length > 0) {
-                availableStaff = shuffleArray(availableStaff);
-                availableStaff.sort(
-                  (a, b) => assignmentCounts[a[0]] - assignmentCounts[b[0]]
-                );
-                const [assignedStaffId, assignedStaffInfo] = availableStaff[0];
-
-                assignments.push({
-                  date: dateStr,
-                  location: locationData.name,
-                  locationColor: locationData.color,
-                  type: "자율",
-                  week,
-                  staff: assignedStaffInfo.name,
-                  staffType: assignedStaffInfo.type,
-                  converted: true, // 전환 플래그
-                });
-
-                assignmentCounts[assignedStaffId]++;
-
-                // 전환 정보 저장
-                convertedToAutoSchedule.push({
-                  date: `${m}/${d}`,
-                  location: locationData.name,
-                });
-              } else {
-                // 모든 운영진이 불가능한 경우에만 배치 불가
-                assignments.push({
-                  date: dateStr,
-                  location: locationData.name,
-                  locationColor: locationData.color,
-                  type: "정기",
-                  week,
-                  staff: "배치 불가",
-                  staffType: "none",
-                  failReason: "모든 운영진 불가",
-                });
-              }
-              return;
-            }
-
-            // 모임장이 가능한 경우 정기모임 진행
-            let availablePartners = partnerStaffList.filter(
-              ([id, info]) => !unavailable[id].includes(dateStr)
-            );
-
-            if (availablePartners.length > 0) {
-              availablePartners = shuffleArray(availablePartners);
-              availablePartners.sort(
-                (a, b) => assignmentCounts[a[0]] - assignmentCounts[b[0]]
-              );
-              const [assignedStaffId, assignedStaffInfo] = availablePartners[0];
-
-              assignments.push({
-                date: dateStr,
-                location: locationData.name,
-                locationColor: locationData.color,
-                type: meetingType,
-                week,
-                staff: `${allStaff["leader"].name}, ${assignedStaffInfo.name}`,
-                staffType: assignedStaffInfo.type,
-              });
-
-              assignmentCounts["leader"]++;
-              assignmentCounts[assignedStaffId]++;
-            } else {
-              assignments.push({
-                date: dateStr,
-                location: locationData.name,
-                locationColor: locationData.color,
-                type: meetingType,
-                week,
-                staff: `${allStaff["leader"].name}, 운영진 배치 불가`,
-                staffType: "none",
-              });
-              assignmentCounts["leader"]++;
-            }
-          } else {
-            // 원래 자율모임인 경우
-            let availableStaff = Object.entries(allStaff).filter(
-              ([id, info]) => !unavailable[id].includes(dateStr)
-            );
-
-            if (availableStaff.length > 0) {
-              availableStaff = shuffleArray(availableStaff);
-              availableStaff.sort(
-                (a, b) => assignmentCounts[a[0]] - assignmentCounts[b[0]]
-              );
-              const [assignedStaffId, assignedStaffInfo] = availableStaff[0];
-
-              assignments.push({
-                date: dateStr,
-                location: locationData.name,
-                locationColor: locationData.color,
-                type: meetingType,
-                week,
-                staff: assignedStaffInfo.name,
-                staffType: assignedStaffInfo.type,
-              });
-
-              assignmentCounts[assignedStaffId]++;
-            } else {
-              assignments.push({
-                date: dateStr,
-                location: locationData.name,
-                locationColor: locationData.color,
-                type: meetingType,
-                week,
-                staff: "배치 불가",
-                staffType: "none",
-                failReason: "운영진 불가",
-              });
-            }
+          const region = sundayLocations[dateStr];
+          if (region && region.trim()) {
+            meetings.push({
+              date: dateStr,
+              region: region.trim(),
+              type: "모임",
+              week: getWeekOfMonth(sunday),
+            });
           }
         });
 
+        meetings.sort((a, b) => {
+          if (a.date !== b.date) {
+            return new Date(a.date) - new Date(b.date);
+          }
+          return 0;
+        });
+
+        const assignments = [];
+        const warnings = [];
+
+        for (let meeting of meetings) {
+          const { date, region, type, week } = meeting;
+
+          let leaderAssigned = false;
+          if (region.includes("강북")) {
+            const leaderAvailable = !unavailable["leader"].includes(date);
+            if (leaderAvailable) {
+              leaderAssigned = true;
+            }
+          }
+
+          let availablePartners = partnerStaffList.filter(
+            ([id, info]) => !unavailable[id].includes(date)
+          );
+
+          if (availablePartners.length > 0) {
+            availablePartners = shuffleArray(availablePartners);
+            availablePartners.sort(
+              (a, b) => assignmentCounts[a[0]] - assignmentCounts[b[0]]
+            );
+            const [assignedStaffId, assignedStaffInfo] = availablePartners[0];
+
+            let staffName;
+            if (leaderAssigned) {
+              staffName = `${allStaff["leader"].name}, ${assignedStaffInfo.name}`;
+              assignmentCounts["leader"]++;
+            } else {
+              staffName = assignedStaffInfo.name;
+            }
+
+            assignments.push({
+              date,
+              region,
+              type,
+              week,
+              staff: staffName,
+            });
+
+            assignmentCounts[assignedStaffId]++;
+          } else {
+            let staffName = leaderAssigned
+              ? `${allStaff["leader"].name}, 운영진 배치 불가`
+              : "운영진 배치 불가";
+
+            assignments.push({
+              date,
+              region,
+              type,
+              week,
+              staff: staffName,
+            });
+
+            warnings.push(
+              `${date} (${region}): 배치 가능한 운영진이 없습니다!`
+            );
+
+            if (leaderAssigned) {
+              assignmentCounts["leader"]++;
+            }
+          }
+        }
+
+        // 경고 메시지 표시
+        if (warnings.length > 0) {
+          const warningMsg =
+            "⚠️ 다음 날짜에 운영진 배치에 문제가 있습니다:\n\n" +
+            warnings.join("\n");
+          alert(warningMsg);
+        }
+
         scheduleData = assignments;
-        displayResults(assignments, year, month, convertedToAutoSchedule);
+        displayResults(assignments, year, month);
       }
 
-      function displayResults(
-        assignments,
-        year,
-        month,
-        convertedSchedules = []
-      ) {
+      function displayResults(assignments, year, month) {
         const resultDiv = document.getElementById("resultContent");
         const stats = calculateStats(assignments);
 
@@ -2174,19 +2074,6 @@
             ${year}년 ${month}월 스케줄이 생성되었습니다! (총 ${totalMeetings}건, 배정 실패 ${failedCount}건)
         </div>
         `;
-
-        // 정기→자율 전환 알림
-        if (convertedSchedules.length > 0) {
-          html += `
-          <div class="alert alert-info">
-              <strong>⚠️ 정기모임 → 자율모임 자동 전환:</strong><br>
-              모임장이 불가능하여 아래 일정이 자율모임으로 전환되었습니다.<br>
-              ${convertedSchedules
-                .map((s) => `• ${s.date} (${s.location})`)
-                .join("<br>")}
-          </div>
-          `;
-        }
 
         html += `
         <div class="stats">
@@ -2207,7 +2094,6 @@
                 <tr>
                     <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">날짜</th>
                     <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">지점</th>
-                    <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">모임유형</th>
                     <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">담당자</th>
                 </tr>
             </thead>
@@ -2221,34 +2107,16 @@
           const bgColor = assignment.locationColor || "#f8f9fa";
           const textColor = getContrastColor(bgColor);
 
-          let typeStr = "";
           let staffStr = assignment.staff;
 
           if (assignment.staff.includes("배치 불가") || assignment.failReason) {
-            typeStr = "배치실패";
             staffStr = assignment.failReason || "";
-          } else {
-            if (assignment.type === "정기") {
-              typeStr = "정기모임";
-            } else {
-              typeStr =
-                assignment.staffType === "lesson"
-                  ? "자율(레슨O)"
-                  : "자율(레슨X)";
-
-              // 전환된 스케줄 표시
-              if (assignment.converted) {
-                typeStr += " 🔄";
-              }
-            }
           }
 
           html += `
             <tr>
                 <td style="border: 1px solid #ddd; padding: 10px; font-weight: bold; text-align: center;">${displayDate}</td>
-                <td style="border: 1px solid #ddd; padding: 10px; text-align: center; background-color: ${bgColor}; color: ${textColor};">${assignment.location}</td>
-                <td class="editable-cell" style="border: 1px solid #ddd; padding: 10px; text-align: center;" 
-                    onclick="editMeetingType('${assignment.date}')">${typeStr}</td>
+                <td style="border: 1px solid #ddd; padding: 10px; text-align: center; background-color: ${bgColor}; color: ${textColor};">${assignment.region}</td>
                 <td class="editable-cell" style="border: 1px solid #ddd; padding: 10px; text-align: center;" 
                     onclick="editStaff('${assignment.date}')">${staffStr}</td>
             </tr>
@@ -2268,106 +2136,6 @@
       // 스케줄 수정 기능
       // ============================================
 
-      function editMeetingType(date) {
-        const assignment = scheduleData.find((a) => a.date === date);
-
-        if (!assignment) {
-          alert("해당 날짜에 모임이 없습니다.");
-          return;
-        }
-
-        const cell = event.target;
-        const originalContent = cell.textContent;
-
-        cell.contentEditable = true;
-        cell.style.backgroundColor = "#fff8dc";
-        cell.style.outline = "2px solid #ff8c1a";
-        cell.focus();
-
-        const range = document.createRange();
-        range.selectNodeContents(cell);
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(range);
-
-        let isSaved = false;
-
-        const saveChanges = () => {
-          if (isSaved) return;
-          isSaved = true;
-
-          cell.contentEditable = false;
-          cell.style.backgroundColor = "";
-          cell.style.outline = "";
-
-          const newText = cell.textContent.trim();
-
-          if (newText.includes("정기") || newText === "정기모임") {
-            assignment.type = "정기";
-            cell.textContent = "정기모임";
-          } else if (
-            newText.includes("레슨O") ||
-            newText.includes("레슨o") ||
-            newText === "자율(레슨O)"
-          ) {
-            assignment.type = "자율";
-            assignment.staffType = "lesson";
-            cell.textContent = "자율(레슨O)";
-          } else if (
-            newText.includes("레슨X") ||
-            newText.includes("레슨x") ||
-            newText === "자율(레슨X)"
-          ) {
-            assignment.type = "자율";
-            assignment.staffType = "general";
-            cell.textContent = "자율(레슨X)";
-          } else if (newText.includes("배치") || newText.includes("불가")) {
-            cell.textContent = "배치실패";
-          } else {
-            cell.textContent = originalContent;
-            return;
-          }
-
-          const [year, month] = document
-            .getElementById("targetMonth")
-            .value.split("-")
-            .map(Number);
-          displayResults(scheduleData, year, month);
-        };
-
-        const cancelEdit = () => {
-          if (isSaved) return;
-          isSaved = true;
-
-          cell.contentEditable = false;
-          cell.style.backgroundColor = "";
-          cell.style.outline = "";
-          cell.textContent = originalContent;
-        };
-
-        const keydownHandler = (e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            cell.removeEventListener("keydown", keydownHandler);
-            cell.removeEventListener("blur", blurHandler);
-            saveChanges();
-          } else if (e.key === "Escape") {
-            e.preventDefault();
-            cell.removeEventListener("keydown", keydownHandler);
-            cell.removeEventListener("blur", blurHandler);
-            cancelEdit();
-          }
-        };
-
-        const blurHandler = () => {
-          cell.removeEventListener("keydown", keydownHandler);
-          saveChanges();
-        };
-
-        cell.addEventListener("keydown", keydownHandler);
-        cell.addEventListener("blur", blurHandler);
-      }
-
       function editStaff(date) {
         const assignment = scheduleData.find((a) => a.date === date);
 
@@ -2382,7 +2150,7 @@
 
         cell.contentEditable = true;
         cell.style.backgroundColor = "#fff8dc";
-        cell.style.outline = "2px solid #ff8c1a";
+        cell.style.outline = "2px solid var(--accent-orange)";
         cell.focus();
 
         const range = document.createRange();
@@ -2435,15 +2203,6 @@
           }
 
           assignment.staff = validNames.join(", ");
-
-          if (assignment.type === "자율" && validNames.length === 1) {
-            const staffEntry = Object.entries(allStaff).find(
-              ([id, info]) => info.name === validNames[0]
-            );
-            if (staffEntry) {
-              assignment.staffType = staffEntry[1].type;
-            }
-          }
 
           const [year, month] = document
             .getElementById("targetMonth")
@@ -2499,6 +2258,87 @@
         });
 
         return stats;
+      }
+
+      // ============================================
+      // 엑셀 내보내기
+      // ============================================
+
+      function exportToExcel() {
+        if (scheduleData.length === 0) {
+          alert("내보낼 스케줄이 없습니다!");
+          return;
+        }
+
+        const monthInput = document.getElementById("targetMonth").value;
+        const [year, month] = monthInput.split("-");
+
+        // 데이터 준비
+        const excelData = scheduleData.map((item) => {
+          return {
+            날짜: item.date,
+            지점: item.region,
+            담당자: item.staff,
+          };
+        });
+
+        // 통계 추가
+        const stats = calculateStats(scheduleData);
+        const statsData = Object.entries(stats).map(([name, count]) => {
+          return {
+            운영진: name,
+            "배치 횟수": count,
+          };
+        });
+
+        // 워크북 생성
+        const wb = XLSX.utils.book_new();
+
+        // 스케줄 시트
+        const ws1 = XLSX.utils.json_to_sheet(excelData);
+        XLSX.utils.book_append_sheet(wb, ws1, "스케줄");
+
+        // 통계 시트
+        const ws2 = XLSX.utils.json_to_sheet(statsData);
+        XLSX.utils.book_append_sheet(wb, ws2, "통계");
+
+        // 파일 다운로드
+        XLSX.writeFile(wb, `스쿼셔스_스케줄_${year}년${month}월.xlsx`);
+      }
+
+      // ============================================
+      // 카카오톡 공유
+      // ============================================
+
+      function shareToKakao() {
+        if (typeof Kakao === "undefined" || !Kakao.isInitialized()) {
+          alert(
+            "카카오톡 공유 기능을 사용할 수 없습니다.\n관리자에게 Kakao JavaScript 키 설정을 요청하세요."
+          );
+          return;
+        }
+
+        if (scheduleData.length === 0) {
+          alert("공유할 스케줄이 없습니다!");
+          return;
+        }
+
+        const monthInput = document.getElementById("targetMonth").value;
+        const [year, month] = monthInput.split("-");
+
+        const stats = calculateStats(scheduleData);
+        const statsText = Object.entries(stats)
+          .map(([name, count]) => `${name}: ${count}회`)
+          .join(", ");
+
+        Kakao.Link.sendDefault({
+          objectType: "text",
+          text: `🏸 스쿼셔스 ${year}년 ${month}월 스케줄\n\n📊 배치 통계:\n${statsText}\n\n총 ${scheduleData.length}건의 일정이 생성되었습니다!`,
+          link: {
+            mobileWebUrl: window.location.href,
+            webUrl: window.location.href,
+          },
+        });
       }
 
       // ============================================
@@ -2678,16 +2518,15 @@
             "현재 월의 설정(지점, 주차별 스케줄, 불가능한 날짜)을 초기화하시겠습니까?\n(운영진 목록은 유지됩니다)"
           )
         ) {
-          document.getElementById("locationList").innerHTML = "";
           document
             .querySelectorAll('input[type="checkbox"]')
             .forEach((checkbox) => (checkbox.checked = false));
           document.getElementById("result").style.display = "none";
 
           scheduleData = [];
-          locationCounter = 0;
+          sundayLocations = {};
 
-          updateWeeklySchedule();
+          updateSundaySchedule();
           updateSundayList();
         }
       }
