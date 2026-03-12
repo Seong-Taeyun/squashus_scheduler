@@ -23,6 +23,8 @@ body {
     padding: 20px;
     color: var(--text-primary);
     transition: background-color 0.3s ease;
+    /* 모바일에서 가로 스크롤 완전 차단 */
+    overflow-x: hidden;
 }
 
 .container {
@@ -32,6 +34,10 @@ body {
     border-radius: 20px;
     box-shadow: 0 20px 60px var(--shadow-color);
     padding: 40px;
+    /* 컨테이너 바깥으로 다시 녁치는 것을 차단 */
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 h1 {
@@ -151,6 +157,29 @@ h1 img {
     }
 
     /* 모바일에서 1열로 확실히 고정 */
+
+    /* 운영 지점 섹션: 레이블과 입력창이 세로로 배치되도록 */
+    .sunday-schedule-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .sunday-schedule-item label {
+        min-width: unset;
+        max-width: unset;
+        width: 100%;
+    }
+
+    .location-input {
+        width: 100%;
+    }
+
+    /* 운영진별 가능 요일 섹션도 전폭 활용 */
+    .date-checkbox {
+        width: 100%;
+        box-sizing: border-box;
+    }
 }
 
 .firebase-status {
@@ -219,7 +248,7 @@ h1 img {
 
 .location-input {
     flex: 1;
-    min-width: 150px;
+    min-width: 0; /* flex 컨테이너에서 자연스럽게 줄어들도록 min-width 제거 */
     padding: 10px;
     border: 2px solid var(--border-color);
     border-radius: 8px;
@@ -227,6 +256,8 @@ h1 img {
     transition: border-color 0.3s;
     background: var(--bg-secondary);
     color: var(--text-primary);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .location-input:focus {
@@ -243,12 +274,19 @@ h1 img {
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     margin-bottom: 12px;
+    /* 모바일에서 되감음성을 위한 안전장치 */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .sunday-schedule-item label {
     font-weight: 600;
-    min-width: 120px;
+    /* min-width 고정값을 제거하여 좌우 여백에 유연하게 대응 */
+    min-width: 100px;
+    max-width: 130px;
     color: var(--text-secondary);
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .staff-item button {
