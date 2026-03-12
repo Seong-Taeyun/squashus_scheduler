@@ -25,6 +25,8 @@ body {
     transition: background-color 0.3s ease;
     /* 모바일에서 가로 스크롤 완전 차단 */
     overflow-x: hidden;
+    /* 한국어 단어 중간 줄바꿈 방지 (예: '오후' → '오'+'후' 분리 방지) */
+    word-break: keep-all;
 }
 
 .container {
