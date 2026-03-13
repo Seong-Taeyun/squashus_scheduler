@@ -160,23 +160,6 @@ h1 img {
 
     /* 모바일에서 1열로 확실히 고정 */
 
-    /* 운영 지점 섹션: 레이블과 입력창이 세로로 배치되도록 */
-    .sunday-schedule-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-    }
-
-    .sunday-schedule-item label {
-        min-width: unset;
-        max-width: unset;
-        width: 100%;
-    }
-
-    .location-input {
-        width: 100%;
-    }
-
     /* 운영진별 가능 요일 섹션도 전폭 활용 */
     .date-checkbox {
         width: 100%;
@@ -249,16 +232,16 @@ h1 img {
 }
 
 .location-input {
-    flex: 1;
-    min-width: 0; /* flex 컨테이너에서 자연스럽게 줄어들도록 min-width 제거 */
-    padding: 10px;
+    flex: 0 1 auto; /* 꽉 채우지 않고 콘텐츠 크기에 맞춰 사용 */
+    min-width: 0;
+    max-width: 140px; /* 4~5글자 지점명이면 충분한 너비 */
+    padding: 8px 10px;
     border: 2px solid var(--border-color);
     border-radius: 8px;
-    font-size: 16px;
+    font-size: 15px;
     transition: border-color 0.3s;
     background: var(--bg-secondary);
     color: var(--text-primary);
-    width: 100%;
     box-sizing: border-box;
 }
 
