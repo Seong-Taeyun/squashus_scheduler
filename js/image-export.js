@@ -34,14 +34,16 @@ async function downloadScheduleImage() {
     // 3. 클론을 감싸는 얇은 래퍼 div 생성 (패딩/마진 0, 화면 밖 배치)
     const wrapper = document.createElement("div");
     wrapper.style.cssText = `
-        position: fixed;
+        position: absolute;
         top: -9999px;
         left: -9999px;
         padding: 0;
         margin: 0;
         background-color: #ffffff;
-        display: inline-block;   /* 테이블 크기에 딱 맞게 수축 */
-        line-height: 0;           /* 인라인 블록 하단 여백 제거 */
+        display: inline-block;
+        line-height: 0;
+        font-size: 0;          /* 인라인 블록 상단 여백 원천 제거 */
+        overflow: hidden;      /* 혹시 남는 여백도 잘라냄 */
     `;
 
     // 4. 클론 셀에 개행 방지 + 스타일 적용
@@ -49,6 +51,10 @@ async function downloadScheduleImage() {
         border-collapse: collapse;
         white-space: nowrap;
         table-layout: auto;
+        margin: 0;             /* 테이블 기본 마진 제거 */
+        vertical-align: top;   /* 상단 정렬로 위쪽 빈 공간 제거 */
+        font-size: 15px;       /* 래퍼에서 0으로 리셋했으므로 다시 설정 */
+        line-height: 1.4;
     `;
     const allCells = clone.querySelectorAll("td, th");
     allCells.forEach(cell => {
@@ -60,18 +66,19 @@ async function downloadScheduleImage() {
     document.body.appendChild(wrapper);
 
     try {
-        // 5. 테이블 실제 렌더링 크기를 측정하여 캡처 크기로 사용
-        const tableWidth  = clone.offsetWidth;
-        const tableHeight = clone.offsetHeight;
+        // 5. 실제 렌더링 크기를 scrollWidth/scrollHeight로 측정
+        //    offsetHeight는 뷰포트 밖에서 잘릴 수 있으므로 scrollHeight 사용
+        const tableWidth  = clone.scrollWidth;
+        const tableHeight = clone.scrollHeight;
 
         const canvas = await html2canvas(wrapper, {
-            scale: 2,                      // 레티나 고해상도
+            scale: 2,
             backgroundColor: "#ffffff",
             useCORS: true,
             logging: false,
-            width: tableWidth,             // 표 너비에 딱 맞게
-            height: tableHeight,           // 표 높이에 딱 맞게
-            windowWidth: tableWidth + 1    // 스크롤바 여지 방지
+            width: tableWidth,
+            windowWidth: tableWidth + 1
+            // height는 지정하지 않음 → html2canvas가 전체 높이 자동 감지
         });
 
         // 6. 파일명 생성 (중복 방지용 시간 포함)
