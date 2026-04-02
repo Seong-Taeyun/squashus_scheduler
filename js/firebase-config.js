@@ -126,6 +126,30 @@ function saveFirebaseConfig() {
 }
 
 function loadFirebaseConfigFromLocal() {
+    // ─────────────────────────────────────────────────────────────
+    // 매직 링크 처리:
+    //   URL의 #config=... 부분에서 Base64 인코딩된 Firebase 설정을 읽어옵니다.
+    //   예: https://your-site.com/#config=eyJhcGlLZXki...
+    //   Hash(#) 뒤의 내용은 서버로 전송되지 않아 비교적 안전합니다.
+    // ─────────────────────────────────────────────────────────────
+    const hash = window.location.hash;
+    if (hash.startsWith("#config=")) {
+        const encodedFromUrl = hash.substring("#config=".length);
+        const configFromUrl = decodeConfig(encodedFromUrl);
+        if (configFromUrl && configFromUrl.apiKey && configFromUrl.projectId) {
+            // 유효한 설정이면 로컬 스토리지에 저장 후 자동 연결
+            localStorage.setItem("firebaseConfig", encodedFromUrl);
+            firebaseConfigData = configFromUrl;
+
+            // URL에서 hash 제거 (주소창에 설정값이 보이지 않도록 정리)
+            history.replaceState(null, "", window.location.pathname + window.location.search);
+
+            connectFirebase();
+            return true;
+        }
+    }
+
+    // 기존 로직: 로컬 스토리지에 저장된 설정 확인
     const encoded = localStorage.getItem("firebaseConfig");
     if (encoded) {
         const config = decodeConfig(encoded);
@@ -141,6 +165,38 @@ function loadFirebaseConfigFromLocal() {
     statusDiv.innerHTML = "서버 미설정<br><small>설정 버튼을 눌러 서버 정보를 입력하세요</small>";
     document.getElementById("configBtn").style.display = "inline-block";
     return false;
+}
+
+/**
+ * 매직 링크 생성 함수
+ * - 현재 저장된 Firebase 설정을 Base64로 인코딩 후 URL hash에 담은 링크를 반환합니다.
+ * - 이 링크를 열면 서버 설정 없이 바로 자동 연결됩니다.
+ * - 콘솔에서 generateMagicLink()로 호출하거나, 버튼에 연결해서 사용 가능합니다.
+ */
+function generateMagicLink() {
+    const encoded = localStorage.getItem("firebaseConfig");
+    if (!encoded) {
+        alert("현재 저장된 서버 설정이 없습니다. 먼저 서버에 연결해주세요.");
+        return null;
+    }
+
+    const baseUrl = window.location.origin + window.location.pathname;
+    const magicLink = `${baseUrl}#config=${encoded}`;
+
+    // 클립보드에 자동 복사 시도
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(magicLink).then(() => {
+            alert("매직 링크가 클립보드에 복사되었습니다!\n이 링크를 공유하면 서버 설정 없이 바로 접속할 수 있습니다.");
+        }).catch(() => {
+            // 클립보드 접근 실패 시 프롬프트로 표시
+            prompt("아래 매직 링크를 복사하세요:", magicLink);
+        });
+    } else {
+        prompt("아래 매직 링크를 복사하세요:", magicLink);
+    }
+
+    console.log("매직 링크:", magicLink);
+    return magicLink;
 }
 
 function deleteFirebaseConfig() {
@@ -163,6 +219,7 @@ function deleteFirebaseConfig() {
 
     document.getElementById("configBtn").style.display = "inline-block";
     document.getElementById("deleteConfigBtn").style.display = "none";
+    document.getElementById("magicLinkBtn").style.display = "none";
 
     alert("서버 설정이 삭제되었습니다.");
 }
@@ -200,6 +257,7 @@ function connectFirebase() {
 
         document.getElementById("configBtn").style.display = "none";
         document.getElementById("deleteConfigBtn").style.display = "inline-block";
+        document.getElementById("magicLinkBtn").style.display = "inline-block";
 
         console.log("서버에 성공적으로 연결되었습니다!");
 
@@ -219,5 +277,6 @@ function connectFirebase() {
 
         document.getElementById("configBtn").style.display = "inline-block";
         document.getElementById("deleteConfigBtn").style.display = "none";
+        document.getElementById("magicLinkBtn").style.display = "none";
     }
 }
